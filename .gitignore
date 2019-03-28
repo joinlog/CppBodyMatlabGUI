@@ -1,0 +1,14 @@
+prj_cpp_matlab/Eigen/
+prj_cpp_matlab/build/
+prj_cpp_matlab/log/
+prj_cpp_matlab/dist/
+prj_cpp_matlab/.dep.inc
+prj_cpp_matlab/*.asv
+prj_cpp_matlab/nbproject/*.mk
+prj_cpp_matlab/nbproject/*.bash
+prj_cpp_matlab/nbproject/*.properties
+prj_cpp_matlab/nbproject/private/*.mk
+prj_cpp_matlab/nbproject/private/*.c
+prj_cpp_matlab/nbproject/private/*.cpp
+prj_cpp_matlab/nbproject/private/*.properties
+prj_cpp_matlab/nbproject/private/private.xml

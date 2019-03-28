@@ -1,0 +1,457 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+/* 
+ * File:   main.cpp
+ * Author: zpmc
+ *
+ * Created on 2018年12月11日, 下午4:30
+ */
+#include "main.h"
+
+#include "config.h"
+#include "Algo_Assistant.h"
+#include "init_file_parser.h"
+#include "tc_traffic.h"
+
+using namespace std;
+
+uint32_t row_count;
+uint32_t col_count;
+
+lane_t *lane_list = NULL;
+node_t *node_list = NULL;
+lane_stop_t *lane_stop_list = NULL;
+
+vector<agv_config_external_t> agvCfgEx;
+vector<move_type_info_external_t> agvMoveTypeInfoEx;
+vector<track_node_external_t> agvTrackNodesEx;
+
+
+
+#if PROJECT == QINGDAO
+
+#define    PROJECT_NAME "QingDao"
+
+#define    PATH_MAP  "..\\..\\data\\"
+
+const char *nodes_fp = PATH_MAP "t_algo_AGV_TRANSPONDER.csv";
+const char *area_type_fp = PATH_MAP "t_algo_area_type.csv";
+const char *table_zone_transition_fp = PATH_MAP "t_algo_zone_transition_case.csv";
+const char *table_move_type_fp = PATH_MAP "t_algo_move_type.csv";
+const char *table_move_policy_fp = PATH_MAP "t_algo_move_type_policy.csv";
+const char *table_Poly_Func_Parameter_fp = PATH_MAP "t_algo_arc_func_paramet.csv";
+const char *table_TrackArc_fp = PATH_MAP "t_algo_arc_funcs.csv";
+const char *table_MoveTrack_fp = PATH_MAP "t_algo_agv_move_track.csv";
+const char *table_back_point_fp = PATH_MAP "t_algo_back_point.csv";
+const char *table_agv_lane_stop_fp = PATH_MAP "t_algo_agv_lane_stop.csv";
+const char *table_agv_lane_planning_fp = PATH_MAP "t_algo_agv_lane_planning.csv";
+const char * agvCfgPathName = PATH_MAP "t_algo_agv_config.csv";
+const char * agvMoveTypeInfoPathName = PATH_MAP "t_algo_agv_move_type_info.csv";
+const char * agvTrackNodePathName = PATH_MAP "t_algo_agv_track_node.csv";
+
+#elif PROJECT == YANGSHAN
+
+#define    PROJECT_NAME "YangShan"
+
+#define    PATH_MAP  "E:\\code\\Repo\\GIT_Cobra\\tests\\map\\YangShan\\"
+
+const char *nodes_fp = PATH_MAP "nodeInfoForYangshan.csv";
+const char *area_type_fp = PATH_MAP "t_algo_area_type.csv";
+const char *table_zone_transition_fp = PATH_MAP "t_algo_zone_transition_case.csv";
+const char *table_move_type_fp = PATH_MAP "t_algo_move_type.csv";
+const char *table_move_policy_fp = PATH_MAP "t_algo_move_type_policy.csv";
+const char *table_Poly_Func_Parameter_fp = PATH_MAP "7_table_arc_func_parameter.csv";
+const char *table_TrackArc_fp = PATH_MAP "8_table_arc_funcs.csv";
+const char *table_MoveTrack_fp = PATH_MAP "9_table_agv_move_track.csv";
+const char *table_back_point_fp = PATH_MAP "t_algo_back_point.csv";
+const char *table_agv_lane_stop_fp = PATH_MAP "t_algo_agv_lane_stop.csv";
+const char *table_agv_lane_planning_fp = PATH_MAP "t_algo_agv_lane_planning.csv";
+const char * agvCfgPathName = PATH_MAP "t_algo_agv_config.csv";
+const char * agvMoveTypeInfoPathName = PATH_MAP "t_algo_agv_move_type_info.csv";
+const char * agvTrackNodePathName = PATH_MAP "t_algo_agv_track_node.csv";
+
+
+#endif
+
+
+
+void CheckFileExist(const char *filename)
+{
+    cout << "check file:" << filename;
+    assert(_access(filename, 0) == 0);
+    cout << " exist" << endl;
+}
+
+/*
+*
+*/
+void InitProject(Project_Info &p_info)
+{
+    strcpy(p_info.cProjName, PROJECT_NAME);
+
+    strcpy(p_info.cProjLogPath, "log");
+    mkdir(p_info.cProjLogPath);
+    init_project_info(&p_info);
+
+}
+
+#define    PATH_MAP1  PATH_MAP
+
+#define TEST_IF_FALSE_RETURNA(cond, rc)  \
+  if ((cond) == false) { \
+    printf("<%s> %d Condition " #cond " is FALSE.\n", __FUNCTION__, __LINE__); \
+    fflush(stdout); \
+    return rc;  \
+  }
+
+#define TEST_IF_FALSE_PRINT_RETURNA(cond, msg_type, msg, rc)  \
+  if ((cond) == false) { \
+    printf("<%s> %d Condition " #cond " is FALSE. code=%d\n", __FUNCTION__, __LINE__); \
+    printf(msg_type, msg); \
+    fflush(stdout); \
+    return rc;  \
+  }
+
+bool init_environment(Algo_Assistant& assist)
+{
+    Project_Info oProj;
+    //_turnoff_log_file_timestamp();
+    InitProject(oProj);
+
+    cout << getcwd(NULL, 0) << endl;
+    Yard_Grid grid;
+    memset(&grid, 0x00, sizeof(Yard_Grid));
+    grid.max_x = 200000;
+    grid.max_y = 100000;
+    grid.max_z = 1;
+    grid.min_pose = 1;
+    grid.max_pose = 4;
+    grid.x_gaps = 5;
+    grid.y_gaps = 5;
+    grid.z_gaps = 2;
+    grid.pose_gaps = 1;
+    const char * map_vertex_path = PATH_MAP1 "t_vertex.csv";
+    const char * map_edge_path = PATH_MAP1 "t_edge.csv";
+    const char * map_adjancency_matrix_path = PATH_MAP1 "t_adjancency_matrix.csv";
+    const char * map_rule_path = PATH_MAP1 "t_rule.csv";
+    const char * map_assign_rules_path = PATH_MAP1 "t_assign_rules.csv";
+    const char * agvCfgPathName = PATH_MAP1 "t_algo_agv_config.csv";
+    const char * agvMoveTypeInfoPathName = PATH_MAP1 "t_algo_agv_move_type_info.csv";
+    const char * agvTrackNodePathName = PATH_MAP1 "t_algo_agv_track_node.csv";
+    init_file_parser parser;
+    bool rst = parser.load_all_tables(map_vertex_path, map_edge_path, map_adjancency_matrix_path, map_rule_path, map_assign_rules_path,
+        agvCfgPathName, agvMoveTypeInfoPathName, agvTrackNodePathName);
+    TEST_IF_FALSE_PRINT_RETURNA(rst, "load_all_tables rst=%d", rst, false);
+    int irt = assist.init_environment(oProj, grid,
+        parser.t_vertexes, parser.t_edges, parser.t_rules, parser.t_matrix, parser.t_assign_records,
+        parser.agvCfgEx, parser.agvMoveTypeInfoEx, parser.agvTrackNodesEx);
+    TEST_IF_FALSE_PRINT_RETURNA(irt == 0, "error! irt=%d\n", irt, false);
+    return true;
+}
+
+
+void InitTestSubRoute(double startX, double startY, double startDeg, double endX, double endY, double endDeg,
+    const char* strType, int moveTypeId, int maxSpeed, bool is_need_continous_lock, bool is_continous_lock_with_next_sub_route,
+    bool is_stop_until_arrive_end_point, int ref1, int ref2, int ref3, int ref4, int ref5, int ref6,
+    double ref1X, double ref1Y, double ref2X, double ref2Y, sub_route_ex &srt)
+{
+    if (strncmp(strType, "STRAIGHT", 4) == 0)
+    {
+        srt.type = SRT_STRAIGHT;
+    }
+    else if (strncmp(strType, "QTURN", 4) == 0)
+    {
+        srt.type = SRT_QTURN;
+    }
+    else if (strncmp(strType, "OBLIQUE", 4) == 0)
+    {
+        srt.type = SRT_OBLIQUE;
+    }
+    else
+    {
+        assert(false);
+    }
+    
+    srt.move_type_id = moveTypeId;
+    srt.start_point.X = startX;  // cm
+    srt.start_point.Y = startY;
+    srt.end_point.X = endX;  // cm
+    srt.end_point.Y = endY;
+    srt.start_deg = startDeg;
+    srt.end_deg = endDeg;
+    srt.max_speed = maxSpeed; // cm/s
+    srt.max_acceleration = 50; // cm/s^2
+    srt.max_deceleration = 50; // cm/s^2
+    srt.is_need_continous_lock = is_need_continous_lock;
+    srt.is_continous_lock_with_next_sub_route = is_continous_lock_with_next_sub_route;
+    srt.is_stop_until_arrive_end_point = is_stop_until_arrive_end_point;
+    srt.reference_parameter_1 = ref1; // cm
+    srt.reference_parameter_2 = ref2; // cm
+    srt.reference_parameter_3 = ref3; // cm
+    srt.reference_parameter_4 = ref4; // cm
+    srt.reference_parameter_5 = ref5; // cm
+    srt.reference_parameter_6 = ref6; // cm
+    srt.reference_point_1.X = ref1X; // cm
+    srt.reference_point_1.Y = ref1Y;
+    srt.reference_point_2.X = ref2X; // cm
+    srt.reference_point_2.Y = ref2Y;                           // 以下是新添加的元素
+                               // int end_speed;  /* unit : cm/s */
+    srt.edgeIds = NULL;
+    srt.edgeNum = 0;
+}
+
+void InitTestRoute(int agvId, vector<sub_route_ex> &rt)
+{
+    rt.clear();
+    if (agvId == 980)
+    {
+        sub_route_ex mSrtEx;
+        InitTestSubRoute(107350, 24100, 90, 107350, 24150, 90, "STRAIGHT", 0, 600, false, false, false,
+            0, 0, 0, 0, 0, 0, 0.0f, 0.0f, 0.0f, 0.0f, mSrtEx);
+        rt.push_back(mSrtEx);
+        InitTestSubRoute(107350, 24150, 90, 107350, 26000, 90, "STRAIGHT", 0, 600, true, true, false,
+            0, 0, 0, 0, 0, 0, 0.0f, 0.0f, 0.0f, 0.0f, mSrtEx);
+        rt.push_back(mSrtEx);
+        InitTestSubRoute(107350, 26000, 90, 108750, 27300, 0, "QTURN", 10, 200, true, false, false,
+            700, 400, 1300, 0, 0, 0, 107350, 27300, 248300, 27300, mSrtEx);
+        rt.push_back(mSrtEx);
+        InitTestSubRoute(108750, 27300, 0, 247000, 27300, 0, "STRAIGHT", 0, 600, false, false, false,
+            0, 0, 0, 0, 0, 0, 0.0f, 0.0f, 0.0f, 0.0f, mSrtEx);
+        rt.push_back(mSrtEx);
+        InitTestSubRoute(247000, 27300, 0, 248300, 28700, 90, "QTURN", 10, 200, true, true, false,
+            700, 400, 1300, 0, 0, 0, 248300, 27300, 0.0f, 0.0f, mSrtEx);
+        rt.push_back(mSrtEx);
+        InitTestSubRoute(248300, 28700, 90, 248300, 30080, 90, "STRAIGHT", 0, 600, true, true, false,
+            0, 0, 0, 0, 0, 0, 0.0f, 0.0f, 0.0f, 0.0f, mSrtEx);
+        rt.push_back(mSrtEx);
+    }
+    else if (agvId == 981)
+    {
+        sub_route_ex mSrtEx;
+        InitTestSubRoute(106850, 24100, 90, 106850, 24150, 90, "STRAIGHT", 0, 600, false, false, false,
+            0, 0, 0, 0, 0, 0, 0.0f, 0.0f, 0.0f, 0.0f, mSrtEx);
+        rt.push_back(mSrtEx);
+        InitTestSubRoute(106850, 24150, 90, 106850, 26000, 90, "STRAIGHT", 0, 600, true, true, false,
+            0, 0, 0, 0, 0, 0, 0.0f, 0.0f, 0.0f, 0.0f, mSrtEx);
+        rt.push_back(mSrtEx);
+        InitTestSubRoute(106850, 26000, 90, 108250, 27300, 0, "QTURN", 10, 200, true, false, false,
+            700, 400, 1300, 0, 0, 0, 107350, 27300, 248300, 27300, mSrtEx);
+        rt.push_back(mSrtEx);
+        InitTestSubRoute(108250, 27300, 0, 246500, 27300, 0, "STRAIGHT", 0, 600, false, false, false,
+            0, 0, 0, 0, 0, 0, 0.0f, 0.0f, 0.0f, 0.0f, mSrtEx);
+        rt.push_back(mSrtEx);
+        InitTestSubRoute(246500, 27300, 0, 247800, 28700, 90, "QTURN", 10, 200, true, true, false,
+            700, 400, 1300, 0, 0, 0, 248300, 27300, 0.0f, 0.0f, mSrtEx);
+        rt.push_back(mSrtEx);
+        InitTestSubRoute(247800, 28700, 90, 247800, 30080, 90, "STRAIGHT", 0, 600, true, true, false,
+            0, 0, 0, 0, 0, 0, 0.0f, 0.0f, 0.0f, 0.0f, mSrtEx);
+        rt.push_back(mSrtEx);
+    }
+
+    /*
+    # idx:0 [107350,24100]->[107350,24150],type:STRAIGHT,move_type_id=0, max_speed=600
+    is_need_continous_lock:0,is_continous_lock_with_next_sub_route:0,is_stop_until_arrive_end_point:0
+    max_acceleration=50,max_deceleration=50
+    # idx:1 [107350,24150]->[107350,26000],type:STRAIGHT,move_type_id=0, max_speed=600
+    is_need_continous_lock:1,is_continous_lock_with_next_sub_route:1,is_stop_until_arrive_end_point:0
+    max_acceleration=50,max_deceleration=50
+    # idx:2 [107350,26000]->[108750,27300],type:QTURN,move_type_id=12, max_speed=200
+    is_need_continous_lock:1,is_continous_lock_with_next_sub_route:0,is_stop_until_arrive_end_point:0
+    reference_parameter:[700,400,1300,0,0,0]
+    reference_point:[107350,27300],[248300,27300]
+    # idx:3 [108750,27300]->[247000,27300],type:STRAIGHT,move_type_id=0, max_speed=600
+    is_need_continous_lock:0,is_continous_lock_with_next_sub_route:0,is_stop_until_arrive_end_point:0
+    max_acceleration=50,max_deceleration=50
+    # idx:4 [247000,27300]->[248300,28700],type:QTURN,move_type_id=10, max_speed=200
+    is_need_continous_lock:1,is_continous_lock_with_next_sub_route:1,is_stop_until_arrive_end_point:0
+    reference_parameter:[400,700,1300,0,0,0]
+    reference_point:[248300,27300],[0,0]
+    # idx:5 [248300,28700]->[248300,30080],type:STRAIGHT,move_type_id=0, max_speed=600
+    is_need_continous_lock:1,is_continous_lock_with_next_sub_route:1,is_stop_until_arrive_end_point:0
+    max_acceleration=50,max_deceleration=50
+    */
+
+}
+
+void InitAGVStatus(int agvId, AGVStatusEx &AGVSt)
+{
+    AGVSt.agvType = AGVt_AGV;
+    AGVSt.id = agvId;
+
+    AGVSt.loadType = NoLoad;
+    AGVSt.speed = 0;      /* unit:cm/s */
+    AGVSt.ctrl_code = CC_NEW_ROUTE;
+    AGVSt.motion_status = MSt_STOP; //int MS;
+    InitTestRoute(agvId, AGVSt.rt);
+    
+
+    AGVSt.current_srt_idx = 0;
+    poseEx mPoseEx;
+    memset(&mPoseEx, 0, sizeof(poseEx));
+    mPoseEx.pos = (pointEx)AGVSt.rt.begin()->start_point;
+    mPoseEx.degree = AGVSt.rt.begin()->start_deg;
+    AGVSt.pose.clear();
+    AGVSt.pose.push_back(mPoseEx); //起点
+    // 终点相关
+    AGVSt.target_srt_idx = 0;
+    AGVSt.target_pose = mPoseEx;
+    //AGVSt.target_srt_idx = AGVSt.rt.size() - 1;
+    //AGVSt.target_pose.pos = (pointEx)AGVSt.rt.rbegin()->end_point;
+    //AGVSt.target_pose.degree = AGVSt.rt.rbegin()->end_deg;
+
+    AGVSt.priority = 0;
+    AGVSt.pre_try_distance = 10; // unit cm
+}
+
+void InitAGVStatus(vector<AGVStatusEx> &vAGVSt)
+{
+    AGVStatusEx AGVSt;
+    for (int i = 0; i < 2; ++i)
+    {
+        InitAGVStatus(980 + i, AGVSt);
+        vAGVSt.push_back(AGVSt);
+    }
+}
+
+#if 0
+void DumpCmdEx(CmdEx &cmd)
+{
+    printf("type=%d target(%.2f,%.2f):%.2f maxStraightSpeed=%d maxSpecialSpeed=%d needStop=%d ref(%#x,%#x,%d,%d,%d,%d,%d) cmdRtIdx=%d\n", 
+        cmd.type, cmd.target.X, cmd.target.Y, cmd.heading, cmd.max_straight_speed, cmd.max_special_speed, cmd.is_need_accurate_stop,
+        cmd.cmd_ref1, cmd.cmd_ref2, cmd.cmd_ref3, cmd.cmd_ref4, cmd.cmd_ref5, cmd.cmd_ref6, cmd.cmd_ref7, cmd.cmd_rt_idx);
+}
+
+void DumpRectsEx(vector<rectanglesEx> &laRect)
+{
+    unsigned int n = laRect.size();
+    printf("Rects size=%d\n", n);
+    for (int i = 0; i < n; ++i)
+    {
+        printf("[%d] (%.2f,%.2f) %d %d %.2f\n", laRect[i].id, laRect[i].center.X, laRect[i].center.Y, 
+            laRect[i].hh, laRect[i].hw, laRect[i].slope);
+    }
+}
+
+void DumpAGVResultEx(vector<AGVResultEx> &vAGVRtEx)
+{
+    unsigned int n = vAGVRtEx.size();
+    printf("AGVResultEx size=%d\n", n);
+    for (int i = 0; i < n; ++i)
+    {
+        printf("[%d] RS=%d RtIdx{cur=%d target=%d claim=%d} claim(%.2f,%.2f) wait{Reason=%d id=%d} RtValidSt=%d ec=%d\n", 
+            vAGVRtEx[i].id, vAGVRtEx[i].run_status, vAGVRtEx[i].current_route_idx, vAGVRtEx[i].target_route_idx, vAGVRtEx[i].claim_route_idx, 
+            vAGVRtEx[i].claim_pos.X, vAGVRtEx[i].claim_pos.Y,
+            vAGVRtEx[i].wait_reason, vAGVRtEx[i].wait_relate_id, vAGVRtEx[i].route_valid_status, vAGVRtEx[i].error_code);
+        DumpCmdEx(vAGVRtEx[i].cmd);
+        DumpRectsEx(vAGVRtEx[i].laRect);
+    }
+}
+#endif
+bool HasErrorInResultEx(vector<AGVResultEx> &vAGVRtEx)
+{
+    int n = vAGVRtEx.size();
+    for (int i = 0; i < n; ++i)
+    {
+        if (vAGVRtEx[i].error_code != AGV_ECt_OK)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+//根据vAGVRtEx生成vAGVStEx
+void AssembleNextStatus(vector<AGVResultEx>& vAGVRtEx, vector<AGVStatusEx>& vAGVStEx)
+{
+    unsigned int n = vAGVStEx.size();
+    for (unsigned int i = 0; i < n; ++i)
+    {
+        if (vAGVStEx[i].ctrl_code == CC_NEW_ROUTE)
+        {
+            vAGVStEx[i].ctrl_code = CC_NORMAL_RUN;
+            vAGVStEx[i].target_srt_idx = vAGVStEx[i].rt.size() - 1;
+            vAGVStEx[i].target_pose.pos = (pointEx)vAGVStEx[i].rt.rbegin()->end_point;
+            vAGVStEx[i].target_pose.degree = vAGVStEx[i].rt.rbegin()->end_deg;
+        }
+        else if (vAGVStEx[i].ctrl_code == CC_NORMAL_RUN)
+        {
+            vAGVStEx[i].pose[0].pos = vAGVRtEx[i].cmd.target;
+            vAGVStEx[i].pose[0].degree = vAGVRtEx[i].cmd.heading;
+            vAGVStEx[i].speed = 600;
+            vAGVStEx[i].current_srt_idx = vAGVRtEx[i].current_route_idx;
+        }
+    }
+
+}
+
+
+/*
+ * 
+ */
+int main(int argc, char** argv) 
+{
+    TcTraffic tcm;    
+    tcm.SetUpMatlabEngine();
+    tcm.SetUpGlobalParamWithMatlab();
+    system("pwd");
+
+    cout<<"hello world argc="<< argc << endl;
+    Algo_Assistant assist;
+    TEST_IF_FALSE_RETURNA(init_environment(assist), -1);
+    printf("Init environment finished!\n");
+
+    ///////////////////////////////////初始完成///////////////////////////////////////
+
+    vector<AGVStatusEx> vAGVStEx;
+    vector<AGVResultEx> vAGVRtEx;
+
+    InitAGVStatus(vAGVStEx);
+    tcm.UpdateRoutes(vAGVStEx);
+    ///////////////////////////////////初始完成///////////////////////////////////////
+    int count = 3;
+    if (argc == 2)
+    {
+        count = atoi(argv[1]);
+        cout << "cycle number = " << count << endl;
+    }
+    else
+    {
+        count = 30;
+    }
+    
+    do 
+    {
+        int ret = assist.TrafficEx(vAGVStEx, vAGVRtEx);
+        if (ret != 0)
+        {
+            cout << "Traffic ec=" << ret << endl;
+        }
+        assist.DumpAGVResultEx(vAGVRtEx);
+        if (HasErrorInResultEx(vAGVRtEx))
+        {
+            break;
+        }
+        tcm.UpdateAgvBoxes(vAGVRtEx);
+        AssembleNextStatus(vAGVRtEx, vAGVStEx);
+        --count;
+#if 1
+        Sleep(2000);
+#else
+        std::cout << "Press q to quit. Press Any other Key to Continue..." << std::endl;
+        char mcret = getchar();
+        if (mcret == 'q')
+        {
+            break;
+        }     
+#endif
+    } while (count > 0);
+
+    ////////////////////////////////////开始清理//////////////////////////////////////
+    //ReleaseData();
+    return 0;
+}
+
