@@ -2,12 +2,16 @@
 <configurationDescriptor version="100">
   <logicalFolder name="root" displayName="root" projectFiles="true" kind="ROOT">
     <logicalFolder name="HeaderFiles" displayName="头文件" projectFiles="true">
+      <itemPath>CellWrapper.h</itemPath>
       <itemPath>main.h</itemPath>
       <itemPath>matlabWrapper.h</itemPath>
+      <itemPath>newCell.h</itemPath>
       <itemPath>tc_statistic.h</itemPath>
     </logicalFolder>
     <logicalFolder name="SourceFiles" displayName="源文件" projectFiles="true">
+      <itemPath>CellWrapper.cpp</itemPath>
       <itemPath>main.cpp</itemPath>
+      <itemPath>newCell.cpp</itemPath>
       <itemPath>tc_statistic.cpp</itemPath>
     </logicalFolder>
     <logicalFolder name="ResourceFiles" displayName="资源文件" projectFiles="true">
@@ -1220,13 +1224,27 @@
                             perm="755"
                             owner="root"
                             group="bin"/>
+          <packFileListElem type="File"
+                            to="${PACKAGE_TOP_DIR}bin/${OUTPUT_BASENAME}.exe"
+                            from="${OUTPUT_PATH}.exe"
+                            perm="755"
+                            owner="root"
+                            group="bin"/>
         </packFileList>
       </packaging>
+      <item path="CellWrapper.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="CellWrapper.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="main.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="main.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="matlabWrapper.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="newCell.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="newCell.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="tc_statistic.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -1253,11 +1271,19 @@
           <developmentMode>5</developmentMode>
         </asmTool>
       </compileType>
+      <item path="CellWrapper.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="CellWrapper.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="main.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="main.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="matlabWrapper.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="newCell.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="newCell.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="tc_statistic.cpp" ex="false" tool="1" flavor2="0">
       </item>

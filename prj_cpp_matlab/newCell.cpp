@@ -13,8 +13,14 @@
 
 #include "newCell.h"
 
-newCell::newCell()
+newCell::newCell():id(0), i(0),j(0),nodeNum(0)
 {
+    memset(rs, 0, sizeof(rs));
+}
+
+newCell::newCell(int mid, int mi, int mj, int mNodeNum):id(mid), i(mi),j(mj),nodeNum(mNodeNum)
+{
+    memset(rs, 0, sizeof(rs));
 }
 
 newCell::~newCell()

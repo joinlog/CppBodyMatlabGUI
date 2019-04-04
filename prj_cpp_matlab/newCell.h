@@ -41,6 +41,7 @@ class newCell
 {
 public:
     newCell();
+    newCell(int mid, int mi, int mj, int mNodeNum);
     ~newCell();
     void SetCurrentRateStatusS(float val);
     void SetCurrentRateStatusE(float val);
