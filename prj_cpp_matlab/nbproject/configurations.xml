@@ -5,12 +5,14 @@
       <itemPath>CellWrapper.h</itemPath>
       <itemPath>main.h</itemPath>
       <itemPath>matlabWrapper.h</itemPath>
+      <itemPath>myBaseUtils.h</itemPath>
       <itemPath>newCell.h</itemPath>
       <itemPath>tc_statistic.h</itemPath>
     </logicalFolder>
     <logicalFolder name="SourceFiles" displayName="源文件" projectFiles="true">
       <itemPath>CellWrapper.cpp</itemPath>
       <itemPath>main.cpp</itemPath>
+      <itemPath>myBaseUtils.cpp</itemPath>
       <itemPath>newCell.cpp</itemPath>
       <itemPath>tc_statistic.cpp</itemPath>
     </logicalFolder>
@@ -52,6 +54,7 @@
           <incDir>
             <pElem>.</pElem>
             <pElem>D:/MATLAB/R2013a/extern/include</pElem>
+            <pElem>../../utils</pElem>
           </incDir>
           <commandLine>-DUSE_DLLEXPORT -Wno-deprecated -Werror -std=c++17</commandLine>
         </ccTool>
@@ -1230,6 +1233,12 @@
                             perm="755"
                             owner="root"
                             group="bin"/>
+          <packFileListElem type="File"
+                            to="${PACKAGE_TOP_DIR}bin/${OUTPUT_BASENAME}.exe"
+                            from="${OUTPUT_PATH}.exe"
+                            perm="755"
+                            owner="root"
+                            group="bin"/>
         </packFileList>
       </packaging>
       <item path="CellWrapper.cpp" ex="false" tool="1" flavor2="0">
@@ -1241,6 +1250,10 @@
       <item path="main.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="matlabWrapper.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="myBaseUtils.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="myBaseUtils.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="newCell.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -1280,6 +1293,10 @@
       <item path="main.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="matlabWrapper.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="myBaseUtils.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="myBaseUtils.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="newCell.cpp" ex="false" tool="1" flavor2="0">
       </item>

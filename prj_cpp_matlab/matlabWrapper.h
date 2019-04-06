@@ -7,7 +7,7 @@
 #include <string>
 #include <iostream>
 #include <Eigen/Eigen>
-//#include <boost\algorithm\string.hpp>
+#include <boost\algorithm\string.hpp>
 
 inline std::string rndcolor(){
     std::string color = "[";

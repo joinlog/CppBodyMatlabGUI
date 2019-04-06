@@ -23,7 +23,7 @@ int main(int argc, char** argv)
 {
 #if ENABLE_MATLAB_GUI
     TcStatistic tcm;    
-    tcm.SetUpMatlabEngine();
+    
     tcm.SetUpGlobalParamWithMatlab();
 
     system("pwd");

@@ -12,13 +12,14 @@
  */
 
 #include "newCell.h"
+#include "myBaseUtils.h"
 
-newCell::newCell():id(0), i(0),j(0),nodeNum(0)
+newCell::newCell():id(0), ireal(0),jreal(0),nodeNum(0)
 {
     memset(rs, 0, sizeof(rs));
 }
 
-newCell::newCell(int mid, int mi, int mj, int mNodeNum):id(mid), i(mi),j(mj),nodeNum(mNodeNum)
+newCell::newCell(int mid, int mi, int mj, int mNodeNum):id(mid), ireal(mi),jreal(mj),nodeNum(mNodeNum)
 {
     memset(rs, 0, sizeof(rs));
 }
@@ -126,18 +127,42 @@ float newCell::GetRateStatusRes(StatusFlag_e st, RateStatus_t &mRs)
     return val;
 }
 
+void newCell::SetRateStatusAll(RateStatus_t rsVal, TimeCount_e tc)
+{
+    memcpy(rs + tc, &rsVal, sizeof(RateStatus_t));
+}
+
 int newCell::GetNodeNum()
 {
     return nodeNum;
 }
 
-void newCell::SetCellsId(std::vector<int> vcCellsId)
+void newCell::SetCellsId(std::vector<newCell *> vcCellsId)
 {
     cellsId.clear();
     cellsId.assign(cellsId.begin(), vcCellsId.begin(), vcCellsId.end());
 }
 
-std::vector<int> &newCell::GetCellsId()
+std::vector<newCell *> &newCell::GetCellsId()
 {
     return cellsId;
+}
+
+void newCell::InitRateStatus(RateStatus_t& maxRs, RateStatus_t& minRs)
+{
+    RateStatus_t rs;
+    CalcRateStatus(maxRs, minRs, rs);
+    rs.tm = 0;
+    SetRateStatusAll(rs, tcPre);
+    rs.tm = 1;
+    SetRateStatusAll(rs, tcCur);
+}
+
+void newCell::CalcRateStatus(RateStatus_t &maxRs, RateStatus_t &minRs, RateStatus_t& rs)
+{
+    rs.s = myBaseUtils::rand(minRs.s, maxRs.s);
+    rs.e = myBaseUtils::rand(minRs.e, maxRs.e);
+    rs.i = myBaseUtils::rand(minRs.i, maxRs.i);
+    rs.r = 1 - rs.s - rs.e - rs.i;
+    
 }

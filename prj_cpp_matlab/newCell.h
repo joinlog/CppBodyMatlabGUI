@@ -43,6 +43,8 @@ public:
     newCell();
     newCell(int mid, int mi, int mj, int mNodeNum);
     ~newCell();
+    int GetCellI() { return ireal; }
+    int GetCellJ() { return jreal; }
     void SetCurrentRateStatusS(float val);
     void SetCurrentRateStatusE(float val);
     void SetCurrentRateStatusI(float val);
@@ -52,20 +54,24 @@ public:
     float GetPreRateStatusI();
     float GetPreRateStatusR();
     int GetNodeNum();
-    void SetCellsId(std::vector<int> vcCellsId);
-    std::vector<int> &GetCellsId();
+    void SetCellsId(std::vector<newCell *> vcCellsId);
+    std::vector<newCell *> &GetCellsId();
+    void InitRateStatus(RateStatus_t &maxRs, RateStatus_t &minRs);
 private:
     void SetRateStatus(float val, StatusFlag_e st, TimeCount_e tc);
     void SetRateStatusRes(float val, StatusFlag_e st, RateStatus_t &mRs);
     float GetRateStatus(StatusFlag_e st, TimeCount_e tc);
     float GetRateStatusRes(StatusFlag_e st, RateStatus_t &mRs);
+    
+    void SetRateStatusAll(RateStatus_t rsVal, TimeCount_e tc);
+    void CalcRateStatus(RateStatus_t &maxRs, RateStatus_t &minRs, RateStatus_t &rs);
 private:
     int id;
-    int i;
-    int j;
+    int ireal;
+    int jreal;
     int nodeNum; // 节点个数
     RateStatus_t rs[2];  // 存放t-1和t的状态比率
-    std::vector<int> cellsId; // 邻居范围内的cellid
+    std::vector<newCell *> cellsId; // 邻居范围内的cellid
 };
 
 #endif /* NEWCELL_H */

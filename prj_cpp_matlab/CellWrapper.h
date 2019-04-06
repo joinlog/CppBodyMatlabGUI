@@ -21,12 +21,28 @@ class CellWrapper
 {
 public:
     CellWrapper();
-    CellWrapper(int mi, int mj, int mcellNum, int mminNodeNum, int mmaxNodeNum, RateStatus_t mminRate, RateStatus_t mmaxRate);
+    CellWrapper(int mi, int mj, int mradius, int mcellNum, int mminNodeNum, int mmaxNodeNum, RateStatus_t mminRate, RateStatus_t mmaxRate);
     ~CellWrapper();
+    void InitCellWrapper(int mi, int mj, int mradius, int mcellNum, int mminNodeNum, int mmaxNodeNum, RateStatus_t mminRate, RateStatus_t mmaxRate);
     void InitCells();
+    void UpdateCells();
+    
+    void Cells2EgineMat(EigenMat &em);
+    
 private:
-    int i;
-    int j;
+    void InitCellPos(std::vector<int> &a);
+    void NewCells(std::vector<int> &a);
+    void NewACell(int id, int i, int j);
+    int MakeIdUsePos(int i, int j);
+    void InitNeighborCells();
+    void GetNeighborPos(int i, int j, int &mini, int &maxi, int &minj, int &maxj);
+    void GetNeightborCells(std::vector<newCell *> vcCells);
+    
+    void Cell2EgineMat(newCell &nc, EigenMat &em, int row);
+private:
+    int imax;
+    int jmax;
+    int radius;
     int cellNum; // 生成umpCells的个数
     int minNodeNum; //每个Cell中最小节点个数
     int maxNodeNum; //每个Cell中最大节点个数
