@@ -13,7 +13,7 @@
 
 #ifndef MYBASEUTILS_H
 #define MYBASEUTILS_H
-#include "cstdlib"
+#include <stdlib.h>
 
 class myBaseUtils
 {
@@ -22,8 +22,8 @@ public:
     myBaseUtils(const myBaseUtils& orig);
     virtual ~myBaseUtils();
     //取minval-maxval中间的随机数，包含minval，不包含maxval; 如果返回的四maxval，表示计算无效
-    static int rand(int minval, int maxval);
-    static float rand(float minval, float maxval);
+    static int myRand(int minval, int maxval);
+    static float myRand(float minval, float maxval);
     static int cutValue(int val, int maxVal, int minVal);
 private:
 

@@ -16,6 +16,7 @@
 
 #include <unordered_map>
 #include "newCell.h"
+#include "matlabWrapper.h"
 
 class CellWrapper
 {
@@ -27,7 +28,7 @@ public:
     void InitCells();
     void UpdateCells();
     
-    void Cells2EgineMat(EigenMat &em);
+    void Cells2EgineMat(Eigen::MatrixXf &em);
     
 private:
     void InitCellPos(std::vector<int> &a);
@@ -38,7 +39,7 @@ private:
     void GetNeighborPos(int i, int j, int &mini, int &maxi, int &minj, int &maxj);
     void GetNeightborCells(std::vector<newCell *> vcCells);
     
-    void Cell2EgineMat(newCell &nc, EigenMat &em, int row);
+    void Cell2EgineMat(newCell &nc, Eigen::MatrixXf &em, int row);
 private:
     int imax;
     int jmax;

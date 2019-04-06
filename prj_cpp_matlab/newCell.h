@@ -13,20 +13,23 @@
 
 #ifndef NEWCELL_H
 #define NEWCELL_H
+#include <iostream>
 #include <vector>
-enum _timeCount_e
+#include <stdio.h>
+#include <memory.h>
+enum TimeCount_e
 {
     tcPre,
     tcCur
-}TimeCount_e;
+};
 
-enum _statusFlag_e
+enum StatusFlag_e
 {
     sfS,
     sfE,
     sfI,
     sfR
-}StatusFlag_e;
+};
 
 typedef struct _rateStatus_t
 {

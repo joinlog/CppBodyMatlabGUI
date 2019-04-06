@@ -10,9 +10,9 @@
  *
  * Created on 2018年12月11日, 下午4:30
  */
+#include <windows.h>
 #include "main.h"
 
-#include "Algo_Assistant.h"
 #include "tc_statistic.h"
 
 using namespace std;
@@ -28,23 +28,17 @@ int main(int argc, char** argv)
 
     system("pwd");
 #endif
-    
-    int mRow = 100;
-    int mCol = 100;
+
     bool bIsStepByStep = false;
-    if (argc == 4)
+    if (argc == 2)
     {
-        mRow = atoi(argv[1]);
-        mCol = atoi(argv[2]);
-        bIsStepByStep = atoi(argv[2]) == 0 ? false : true;
+        bIsStepByStep = atoi(argv[1]) == 0 ? false : true;
     }
     else
     {
-        cout << "Usage:" << argv[0] << " row col isStepbyStep" << endl;
+        cout << "Usage:" << argv[0] << " isStepbyStep" << endl;
     }
-    cout << "row=" << mRow << ",col=" << mCol << endl;
-    tcm.SetStatisticSize(mRow, mCol);
-    
+
     do 
     {
 #if ENABLE_MATLAB_GUI

@@ -1,3 +1,4 @@
+#include <io.h>
 #include <Eigen/Eigen>
 #include "tc_statistic.h"
 #include "matlabWrapper.h"
@@ -81,12 +82,12 @@ void TcStatistic::InitCellWrapper()
 
 void TcStatistic::GetCellWrapperParam(int& mi, int& mj, int& mradius, int& mcellNum, int& mminNodeNum, int& mmaxNodeNum)
 {
-    EigenMat mInputParam;
+    Eigen::MatrixXf mInputParam;
     mMAInputParam.get(mInputParam);
     EigenMat2CellWrapperParam(mInputParam, mi, mj, mradius, mcellNum, mminNodeNum, mmaxNodeNum);
 }
 
-void TcStatistic::EigenMat2CellWrapperParam(EigenMat& em, int& mi, int& mj, int& mradius, int& mcellNum, int& mminNodeNum, int& mmaxNodeNum)
+void TcStatistic::EigenMat2CellWrapperParam(Eigen::MatrixXf& em, int& mi, int& mj, int& mradius, int& mcellNum, int& mminNodeNum, int& mmaxNodeNum)
 {
     mi = em(0, 0);
     mj = em(0, 1);
@@ -99,13 +100,13 @@ void TcStatistic::EigenMat2CellWrapperParam(EigenMat& em, int& mi, int& mj, int&
 
 void TcStatistic::GetRateRange(RateStatus_t& minRate, RateStatus_t& maxRate)
 {
-    EigenMat mRateRange;
+    Eigen::MatrixXf mRateRange;
     mMARateRange.get(mRateRange);
     EigenMat2RateRange(mRateRange, 0, minRate);
     EigenMat2RateRange(mRateRange, 1, maxRate);
 }
 
-void  TcStatistic::EigenMat2RateRange(EigenMat& em, int row, RateStatus_t& rs)
+void  TcStatistic::EigenMat2RateRange(Eigen::MatrixXf& em, int row, RateStatus_t& rs)
 {
     rs.s = em(row, 0);
     rs.e = em(row, 1);

@@ -140,7 +140,7 @@ int newCell::GetNodeNum()
 void newCell::SetCellsId(std::vector<newCell *> vcCellsId)
 {
     cellsId.clear();
-    cellsId.assign(cellsId.begin(), vcCellsId.begin(), vcCellsId.end());
+    cellsId.assign(vcCellsId.begin(), vcCellsId.end());
 }
 
 std::vector<newCell *> &newCell::GetCellsId()
@@ -160,9 +160,9 @@ void newCell::InitRateStatus(RateStatus_t& maxRs, RateStatus_t& minRs)
 
 void newCell::CalcRateStatus(RateStatus_t &maxRs, RateStatus_t &minRs, RateStatus_t& rs)
 {
-    rs.s = myBaseUtils::rand(minRs.s, maxRs.s);
-    rs.e = myBaseUtils::rand(minRs.e, maxRs.e);
-    rs.i = myBaseUtils::rand(minRs.i, maxRs.i);
+    rs.s = myBaseUtils::myRand(minRs.s, maxRs.s);
+    rs.e = myBaseUtils::myRand(minRs.e, maxRs.e);
+    rs.i = myBaseUtils::myRand(minRs.i, maxRs.i);
     rs.r = 1 - rs.s - rs.e - rs.i;
     
 }

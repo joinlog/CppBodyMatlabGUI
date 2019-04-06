@@ -55,12 +55,14 @@
             <pElem>.</pElem>
             <pElem>D:/MATLAB/R2013a/extern/include</pElem>
             <pElem>../../utils</pElem>
+            <pElem>D:/Program Files (x86)/MATLAB/R2013a/extern/include</pElem>
           </incDir>
           <commandLine>-DUSE_DLLEXPORT -Wno-deprecated -Werror -std=c++17</commandLine>
         </ccTool>
         <linkerTool>
           <linkerAddLib>
             <pElem>D:/MATLAB/R2013a/bin/win32</pElem>
+            <pElem>D:/Program Files (x86)/MATLAB/R2013a/bin/win32</pElem>
           </linkerAddLib>
           <linkerCopySharedLibs>true</linkerCopySharedLibs>
           <commandLine>-llibmat -llibmx -llibeng</commandLine>

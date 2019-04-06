@@ -23,9 +23,9 @@ private:
     
     void InitCellWrapper();
     void GetCellWrapperParam(int &mi, int &mj, int &mradius, int &mcellNum, int &mminNodeNum, int &mmaxNodeNum);
-    void EigenMat2CellWrapperParam(EigenMat &em, int &mi, int &mj, int &mradius, int &mcellNum, int &mminNodeNum, int &mmaxNodeNum);
+    void EigenMat2CellWrapperParam(Eigen::MatrixXf &em, int &mi, int &mj, int &mradius, int &mcellNum, int &mminNodeNum, int &mmaxNodeNum);
     void GetRateRange(RateStatus_t &minRate, RateStatus_t &maxRate);
-    void EigenMat2RateRange(EigenMat &em, int row, RateStatus_t &rs);
+    void EigenMat2RateRange(Eigen::MatrixXf &em, int row, RateStatus_t &rs);
     
 private:
     myMatlabEngine *m_eng;
