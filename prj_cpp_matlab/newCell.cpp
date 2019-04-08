@@ -14,12 +14,17 @@
 #include "newCell.h"
 #include "myBaseUtils.h"
 
-newCell::newCell():id(0), ireal(0),jreal(0),nodeNum(0)
+newCell::newCell():id(0), ireal(0),jreal(0),nodeNum(0),lambda(0), tau(0), miu(0),sigma(0),epsilon(0)
 {
     memset(rs, 0, sizeof(rs));
 }
 
-newCell::newCell(int mid, int mi, int mj, int mNodeNum):id(mid), ireal(mi),jreal(mj),nodeNum(mNodeNum)
+newCell::newCell(int mid, int mi, int mj, int mNodeNum,float mlambda,
+    float mtau,
+    float mmiu,
+    float msigma,
+    float mepsilon):id(mid), ireal(mi),jreal(mj),nodeNum(mNodeNum),
+        lambda(mlambda), tau(mtau), miu(mmiu),sigma(msigma),epsilon(mepsilon)
 {
     memset(rs, 0, sizeof(rs));
 }
@@ -165,4 +170,73 @@ void newCell::CalcRateStatus(RateStatus_t &maxRs, RateStatus_t &minRs, RateStatu
     rs.i = myBaseUtils::myRand(minRs.i, maxRs.i);
     rs.r = 1 - rs.s - rs.e - rs.i;
     
+}
+
+void newCell::CopyCurrent2PreviousRateStatus()
+{
+    rs[tcPre] = rs[tcCur];
+}
+
+void newCell::CalcCurrentRateStatus()
+{
+    SetCurrentRateStatusS(CalcCurS());
+    SetCurrentRateStatusE(CalcCurE());
+    SetCurrentRateStatusI(CalcCurI());
+    SetCurrentRateStatusR(CalcCurR());
+}
+
+float newCell::CalcCurS()
+{
+    float preS = GetPreRateStatusS();
+    float preI = GetPreRateStatusI();
+    float numRate = SigmaSumNumRate();
+    return (preS - (lambda + tau)*(1 + numRate) * preS * preI + miu *(1 - preS) );
+}
+
+float newCell::CalcCurE()
+{
+    float preS = GetPreRateStatusS();
+    float preI = GetPreRateStatusI();
+    float preE = GetPreRateStatusE();
+    float numRate = SigmaSumNumRate();
+    return (1 - sigma - miu) * preE + (1 + numRate) * lambda * preS * preI;
+}
+
+float newCell::CalcCurI()
+{
+    float preS = GetPreRateStatusS();
+    float preI = GetPreRateStatusI();
+    float preE = GetPreRateStatusE();
+    float numRate = SigmaSumNumRate();
+    return (1 - epsilon - miu) * preI + sigma * preE + (1 + numRate) * tau * preS * preI;
+}
+
+float newCell::CalcCurR()
+{
+    float preR = GetPreRateStatusR();
+    float preI = GetPreRateStatusI();
+    return (1 - miu) * preR + epsilon * preI;
+}
+
+float newCell::SigmaSumNumRate()
+{
+    float sumNodeNum = 0;
+    unsigned int n = cellsId.size();
+    for (unsigned int i = 0; i < n; ++i)
+    {
+        sumNodeNum += cellsId[i]->GetNodeNum();
+    }
+    return sumNodeNum / (float)GetNodeNum();
+}
+
+void newCell::DumpStr()
+{
+    printf("\nid, i, j, nodeNum\n %d, %d, %d, %d\n", id, ireal, jreal, nodeNum);
+    DumpRateStatus(rs[0]);
+    DumpRateStatus(rs[1]);
+}
+
+void newCell::DumpRateStatus(RateStatus_t& rs)
+{
+    printf("S, E, I, R\n %.2f, %.2f, %.2f, %.2f\n", rs.s, rs.e, rs.i, rs.r);
 }

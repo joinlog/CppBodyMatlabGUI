@@ -33,7 +33,11 @@ CellWrapper::~CellWrapper()
 {
 }
 
-void CellWrapper::InitCellWrapper(int mi, int mj, int mradius, int mcellNum, int mminNodeNum, int mmaxNodeNum, RateStatus_t mminRate, RateStatus_t mmaxRate)
+void CellWrapper::InitCellWrapper(int mi, int mj, int mradius, int mcellNum, int mminNodeNum, int mmaxNodeNum, RateStatus_t mminRate, RateStatus_t mmaxRate, float mlambda,
+    float mtau,
+    float mmiu,
+    float msigma,
+    float mepsilon)
 {
     imax = mi;
     jmax = mj;
@@ -43,6 +47,11 @@ void CellWrapper::InitCellWrapper(int mi, int mj, int mradius, int mcellNum, int
     maxNodeNum = mmaxNodeNum;
     minRate = mminRate;
     maxRate = mmaxRate;
+    lambda = mlambda;
+    tau = mtau;
+    miu = mmiu;
+    sigma = msigma;
+    epsilon = mepsilon;
 }
 
 void CellWrapper::InitCells()
@@ -61,6 +70,16 @@ void CellWrapper::InitCells()
 void CellWrapper::UpdateCells()
 {
     // 主要的逻辑程序，实现公式6
+    std::unordered_map<int, newCell>::iterator umpit = umpCells.begin();
+    for (; umpit != umpCells.end(); ++umpit)
+    {
+        umpit->second.CopyCurrent2PreviousRateStatus();
+    }
+    for (umpit = umpCells.begin(); umpit != umpCells.end(); ++umpit)
+    {
+        umpit->second.CalcCurrentRateStatus();
+        umpit->second.DumpStr();
+    }
 }
 
 void CellWrapper::Cells2EgineMat(Eigen::MatrixXf& em)
@@ -115,7 +134,7 @@ void CellWrapper::NewCells(std::vector<int> &a)
 void CellWrapper::NewACell(int id, int i, int j)
 {
     int mNodeNum = myBaseUtils::myRand(minNodeNum, maxNodeNum);
-    newCell nc(id, i, j, mNodeNum);
+    newCell nc(id, i, j, mNodeNum, lambda, tau, miu, sigma, epsilon);
     umpCells.insert(std::pair<int, newCell>(id, nc));
     // 初始化RateStatus_t
     std::unordered_map<int, newCell>::iterator umpit = umpCells.find(id);

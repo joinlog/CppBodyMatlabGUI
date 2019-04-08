@@ -22,8 +22,16 @@ private:
     void SetUpMatlabEngine();
     
     void InitCellWrapper();
-    void GetCellWrapperParam(int &mi, int &mj, int &mradius, int &mcellNum, int &mminNodeNum, int &mmaxNodeNum);
-    void EigenMat2CellWrapperParam(Eigen::MatrixXf &em, int &mi, int &mj, int &mradius, int &mcellNum, int &mminNodeNum, int &mmaxNodeNum);
+    void GetCellWrapperParam(int &mi, int &mj, int &mradius, int &mcellNum, int &mminNodeNum, int &mmaxNodeNum, float mlambda,
+    float mtau,
+    float mmiu,
+    float msigma,
+    float mepsilon);
+    void EigenMat2CellWrapperParam(Eigen::MatrixXf &em, int &mi, int &mj, int &mradius, int &mcellNum, int &mminNodeNum, int &mmaxNodeNum, float mlambda,
+    float mtau,
+    float mmiu,
+    float msigma,
+    float mepsilon);
     void GetRateRange(RateStatus_t &minRate, RateStatus_t &maxRate);
     void EigenMat2RateRange(Eigen::MatrixXf &em, int row, RateStatus_t &rs);
     
@@ -36,6 +44,11 @@ private:
 //    int cellNum; // 生成umpCells的个数
 //    int minNodeNum; //每个Cell中最小节点个数
 //    int maxNodeNum; //每个Cell中最大节点个数
+//    float lambda; // λ
+//    float tau; // τ
+//    float miu; //μ
+//    float sigma; //σ,ς
+//    float epsilon; // ε
     MatIOArray mMAInputParam; // 1行6列
 //    RateStatus_t minRate; // 各个状态占有最大比率,用于初始化cell
 //    RateStatus_t maxRate; // 各个状态占有最大比率,用于初始化cell

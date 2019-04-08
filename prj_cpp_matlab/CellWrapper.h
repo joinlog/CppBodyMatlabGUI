@@ -24,7 +24,11 @@ public:
     CellWrapper();
     CellWrapper(int mi, int mj, int mradius, int mcellNum, int mminNodeNum, int mmaxNodeNum, RateStatus_t mminRate, RateStatus_t mmaxRate);
     ~CellWrapper();
-    void InitCellWrapper(int mi, int mj, int mradius, int mcellNum, int mminNodeNum, int mmaxNodeNum, RateStatus_t mminRate, RateStatus_t mmaxRate);
+    void InitCellWrapper(int mi, int mj, int mradius, int mcellNum, int mminNodeNum, int mmaxNodeNum, RateStatus_t mminRate, RateStatus_t mmaxRate, float mlambda,
+    float mtau,
+    float mmiu,
+    float msigma,
+    float mepsilon);
     void InitCells();
     void UpdateCells();
     
@@ -40,6 +44,7 @@ private:
     void GetNeightborCells(std::vector<newCell *> vcCells);
     
     void Cell2EgineMat(newCell &nc, Eigen::MatrixXf &em, int row);
+
 private:
     int imax;
     int jmax;
@@ -50,6 +55,12 @@ private:
     RateStatus_t minRate; // 各个状态占有最大比率,用于初始化cell
     RateStatus_t maxRate; // 各个状态占有最大比率,用于初始化cell
     std::unordered_map<int, newCell> umpCells; // cell id 作为key
+    
+    float lambda; // λ
+    float tau; // τ
+    float miu; //μ
+    float sigma; //σ,ς
+    float epsilon; // ε
 };
 
 #endif /* CELLWRAPPER_H */
