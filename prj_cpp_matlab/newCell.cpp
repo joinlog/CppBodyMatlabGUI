@@ -29,8 +29,26 @@ newCell::newCell(int mid, int mi, int mj, int mNodeNum,float mlambda,
     memset(rs, 0, sizeof(rs));
 }
 
+newCell::newCell(const newCell& a)
+{
+    //memcpy(this, &a, sizeof(newCell));
+    std::cout << "newCell(const newCell& a)" << std::endl;
+}
+newCell::newCell( newCell&& a)
+{
+    //memcpy(this, &a, sizeof(newCell));
+    std::cout << "newCell( newCell&& a)" << std::endl;
+}
+
 newCell::~newCell()
 {
+}
+
+newCell & newCell::operator =(const newCell& a)
+{
+    //memcpy(this, &a, sizeof(newCell));
+    std::cout << "operator =(const newCell& a)" << std::endl;
+    return *this;
 }
 
 void newCell::SetCurrentRateStatusS(float val)
@@ -90,17 +108,17 @@ float newCell::GetPreRateStatusS()
 
 float newCell::GetPreRateStatusE()
 {
-    return GetRateStatus(sfS, tcPre);
+    return GetRateStatus(sfE, tcPre);
 }
 
 float newCell::GetPreRateStatusI()
 {
-    return GetRateStatus(sfS, tcPre);
+    return GetRateStatus(sfI, tcPre);
 }
 
 float newCell::GetPreRateStatusR()
 {
-    return GetRateStatus(sfS, tcPre);
+    return GetRateStatus(sfR, tcPre);
 }
 
 float newCell::GetRateStatus(StatusFlag_e st, TimeCount_e tc)
@@ -144,7 +162,7 @@ int newCell::GetNodeNum()
 
 void newCell::SetCellsId(std::vector<newCell *> vcCellsId)
 {
-    cellsId.clear();
+    //cellsId.clear();
     cellsId.assign(vcCellsId.begin(), vcCellsId.end());
 }
 
@@ -224,14 +242,14 @@ float newCell::SigmaSumNumRate()
     unsigned int n = cellsId.size();
     for (unsigned int i = 0; i < n; ++i)
     {
-        sumNodeNum += cellsId[i]->GetNodeNum();
+        sumNodeNum += (float)cellsId[i]->GetNodeNum();
     }
     return sumNodeNum / (float)GetNodeNum();
 }
 
 void newCell::DumpStr()
 {
-    printf("\nid, i, j, nodeNum\n %d, %d, %d, %d\n", id, ireal, jreal, nodeNum);
+    printf("\nid, i, j, nodeNum, neighbor num\n %d, %d, %d, %d, %d\n", id, ireal, jreal, nodeNum, cellsId.size());
     DumpRateStatus(rs[0]);
     DumpRateStatus(rs[1]);
 }

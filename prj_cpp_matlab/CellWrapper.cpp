@@ -10,7 +10,7 @@
  * 
  * Created on 2019年4月4日, 下午4:33
  */
-
+#include <stdio.h>
 #include "CellWrapper.h"
 #include "myBaseUtils.h"
 
@@ -31,6 +31,12 @@ imax(mi),jmax(mj),radius(mradius), cellNum(mcellNum), minNodeNum(mminNodeNum),ma
 
 CellWrapper::~CellWrapper()
 {
+    std::unordered_map<int, newCell*>::iterator umpit = umpCells.begin();
+    for (; umpit != umpCells.end(); ++umpit)
+    {
+        delete umpit->second;
+        umpit->second = NULL;
+    }
 }
 
 void CellWrapper::InitCellWrapper(int mi, int mj, int mradius, int mcellNum, int mminNodeNum, int mmaxNodeNum, RateStatus_t mminRate, RateStatus_t mmaxRate, float mlambda,
@@ -52,6 +58,11 @@ void CellWrapper::InitCellWrapper(int mi, int mj, int mradius, int mcellNum, int
     miu = mmiu;
     sigma = msigma;
     epsilon = mepsilon;
+    std::cout<<mi << "    " <<mj << "    " <<mradius << "    " <<mcellNum << "    " <<mminNodeNum << "    " <<mmaxNodeNum  << "    " <<mlambda 
+   << "    " <<mtau 
+   << "    " <<mmiu 
+   << "    " <<msigma 
+   << "    " <<mepsilon <<std::endl;
 }
 
 void CellWrapper::InitCells()
@@ -59,9 +70,9 @@ void CellWrapper::InitCells()
     // 根据最大最小值初始化所有的cell
     std::vector<int> a;
     InitCellPos(a);
-    
+    std::cout << "After InitCellPos" << std::endl;
     NewCells(a);
-    
+    std::cout << "After NewCells" << std::endl;
     // 初始化cellsId
     InitNeighborCells();
     
@@ -70,15 +81,15 @@ void CellWrapper::InitCells()
 void CellWrapper::UpdateCells()
 {
     // 主要的逻辑程序，实现公式6
-    std::unordered_map<int, newCell>::iterator umpit = umpCells.begin();
+    std::unordered_map<int, newCell*>::iterator umpit = umpCells.begin();
     for (; umpit != umpCells.end(); ++umpit)
     {
-        umpit->second.CopyCurrent2PreviousRateStatus();
+        umpit->second->CopyCurrent2PreviousRateStatus();
     }
     for (umpit = umpCells.begin(); umpit != umpCells.end(); ++umpit)
     {
-        umpit->second.CalcCurrentRateStatus();
-        umpit->second.DumpStr();
+        umpit->second->CalcCurrentRateStatus();
+        umpit->second->DumpStr();
     }
 }
 
@@ -86,11 +97,11 @@ void CellWrapper::Cells2EgineMat(Eigen::MatrixXf& em)
 {
     // i,j,s,e,i,r  n*6 n行6列 即
     em.resize(umpCells.size(), 6);
-    std::unordered_map<int, newCell>::iterator umpit = umpCells.begin();
+    std::unordered_map<int, newCell*>::iterator umpit = umpCells.begin();
     int row = 0;
     for (; umpit != umpCells.end(); ++umpit)
     {
-        Cell2EgineMat(umpit->second, em, row);
+        Cell2EgineMat(*(umpit->second), em, row);
         ++row;
     }
 }
@@ -105,9 +116,10 @@ void CellWrapper::InitCellPos(std::vector<int> &a)
     {
         int mi = rand() % imax;
         int mj = rand() % jmax;
-        if (a[mi *jmax + mj] == 0)
+        int id = MakeIdUsePos(mi, mj);
+        if (a[id] == 0)
         {
-            a[mi *jmax + mj] = 1;
+            a[id] = 1;
             ++k;
         }
     }
@@ -117,33 +129,55 @@ void CellWrapper::InitCellPos(std::vector<int> &a)
 // 根据a中的位置初始化cells
 void CellWrapper::NewCells(std::vector<int> &a)
 {
+    std::cout << "NewCells start a.szie="<< a.size() << std::endl;
+    std::cout << "[id]=a i,j" << std::endl;
     for (int i = 0; i < imax; ++i)
     {
         for (int j = 0; j < jmax; ++j)
         {
             int id = MakeIdUsePos(i, j);
+//            std::cout << "[" << id << "]=" << a[id] << "," << i << "," << j << std::endl; 
             if (a[id] != 0)
             {
                 NewACell(id, i, j);
             }
         }
     }
+    std::cout << std::endl;
     
 }
 
 void CellWrapper::NewACell(int id, int i, int j)
 {
-    int mNodeNum = myBaseUtils::myRand(minNodeNum, maxNodeNum);
-    newCell nc(id, i, j, mNodeNum, lambda, tau, miu, sigma, epsilon);
-    umpCells.insert(std::pair<int, newCell>(id, nc));
-    // 初始化RateStatus_t
-    std::unordered_map<int, newCell>::iterator umpit = umpCells.find(id);
-    if (umpit ==  umpCells.end())
+//    printf("new A Cell\n");
+//    std::cout << "new A Cell" << std::flush;
+    std::unordered_map<int, newCell*>::iterator umpit = umpCells.find(id);
+    if (umpit !=  umpCells.end())
     {
+        std::cout << "error: cell is exist already!! id=" << id << std::flush;
         return ;
     }
-
-    umpit->second.InitRateStatus(maxRate, minRate);
+//    std::cout << "before mNodeNum min="<< minNodeNum << ", max=" << maxNodeNum << std::endl << std::flush; 
+    int mNodeNum = myBaseUtils::myRand(minNodeNum, maxNodeNum);
+//    std::cout << "before new newCell" << std::endl << std::flush; 
+    newCell *nc = new newCell(id, i, j, mNodeNum, lambda, tau, miu, sigma, epsilon);
+    if (nc == NULL)
+    {
+        std::cout << "new cell fail" << std::flush;
+        return;
+    }
+//    std::cout << "before insert" << std::flush; 
+    umpCells.insert(std::pair<int, newCell*>(id, nc));
+//    std::cout << "after insert" << std::flush;
+    // 初始化RateStatus_t
+    umpit = umpCells.find(id);
+    if (umpit ==  umpCells.end())
+    {
+        std::cout << "not find cell id=" << id << std::flush;
+        return ;
+    }
+//    std::cout << "before initrs" << std::flush;
+    umpit->second->InitRateStatus(maxRate, minRate);
 }
 
 int CellWrapper::MakeIdUsePos(int i, int j)
@@ -153,19 +187,20 @@ int CellWrapper::MakeIdUsePos(int i, int j)
 
 void CellWrapper::InitNeighborCells()
 {
+    std::vector<newCell *> mCells;
     for (int i = 0; i < imax; ++i)
     {
         for (int j = 0; j < jmax; ++j)
         {
             int id = MakeIdUsePos(i, j);
-            std::unordered_map<int, newCell>::iterator umpit = umpCells.find(id);
+            std::unordered_map<int, newCell*>::iterator umpit = umpCells.find(id);
             if (umpit == umpCells.end())
             {
                 continue;
             }
-            std::vector<newCell *> mCells;
-            GetNeightborCells(mCells);
-            umpit->second.SetCellsId(mCells);
+            mCells.clear();
+            GetNeightborCells(i, j, mCells);
+            umpit->second->SetCellsId(mCells);
         }
     }
     
@@ -180,25 +215,25 @@ void CellWrapper::GetNeighborPos(int i, int j, int& mini, int& maxi, int& minj, 
     maxj = myBaseUtils::cutValue(j + radius, 0, jmax - 1);
 }
 
-void CellWrapper::GetNeightborCells(std::vector<newCell*> vcCells)
+void CellWrapper::GetNeightborCells(int mi, int mj, std::vector<newCell*> &vcCells)
 {
     int mini;
     int maxi;
     int minj;
     int maxj;
-    
+    GetNeighborPos(mi, mj, mini, maxi, minj, maxj);
     for (int i = mini; i <= maxi; ++i)
     {
         for (int j = minj; j <= maxj; ++j)
         {
-            GetNeighborPos(i, j, mini, maxi, minj, maxj);
+            
             int id = MakeIdUsePos(i, j);
-            std::unordered_map<int, newCell>::iterator umpit = umpCells.find(id);
+            std::unordered_map<int, newCell*>::iterator umpit = umpCells.find(id);
             if (umpit == umpCells.end())
             {
                 continue;
             }
-            vcCells.push_back(&(umpit->second));
+            vcCells.push_back((umpit->second));
         }
     }
 }

@@ -49,7 +49,10 @@ public:
     float mmiu,
     float msigma,
     float mepsilon);
+    newCell(const newCell & a);
+    newCell(newCell && a);
     ~newCell();
+    newCell & operator=( const newCell &a);
     int GetCellI() { return ireal; }
     int GetCellJ() { return jreal; }
     void SetCurrentRateStatusS(float val);

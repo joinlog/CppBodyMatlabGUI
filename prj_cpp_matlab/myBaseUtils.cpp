@@ -34,7 +34,7 @@ int myBaseUtils::myRand(int minval, int maxval)
         return maxval;
     }
 
-    return minval + rand() % (maxval - maxval);
+    return minval + rand() % (maxval - minval);
 }
 
 float myBaseUtils::myRand(float minval, float maxval)
@@ -42,7 +42,7 @@ float myBaseUtils::myRand(float minval, float maxval)
     return minval + (float)rand() * (maxval - minval) / (float)RAND_MAX;
 }
 
-int myBaseUtils::cutValue(int val, int maxVal, int minVal)
+int myBaseUtils::cutValue(int val, int minVal, int maxVal)
 {
     if (val < minVal)
     {

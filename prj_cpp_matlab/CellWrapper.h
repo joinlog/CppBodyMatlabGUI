@@ -41,7 +41,7 @@ private:
     int MakeIdUsePos(int i, int j);
     void InitNeighborCells();
     void GetNeighborPos(int i, int j, int &mini, int &maxi, int &minj, int &maxj);
-    void GetNeightborCells(std::vector<newCell *> vcCells);
+    void GetNeightborCells(int i, int j, std::vector<newCell *> &vcCells);
     
     void Cell2EgineMat(newCell &nc, Eigen::MatrixXf &em, int row);
 
@@ -54,7 +54,7 @@ private:
     int maxNodeNum; //每个Cell中最大节点个数
     RateStatus_t minRate; // 各个状态占有最大比率,用于初始化cell
     RateStatus_t maxRate; // 各个状态占有最大比率,用于初始化cell
-    std::unordered_map<int, newCell> umpCells; // cell id 作为key
+    std::unordered_map<int, newCell*> umpCells; // cell id 作为key
     
     float lambda; // λ
     float tau; // τ

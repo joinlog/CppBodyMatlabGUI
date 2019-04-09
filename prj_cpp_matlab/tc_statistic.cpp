@@ -26,40 +26,48 @@ void TcStatistic::SetUpMatlabEngine()
     m_eng->exec(strCmd);
     free(mCwd);
     mCwd = NULL;
-
-    m_eng->exec("main");
+    
 }
 
 void TcStatistic::SetUpGlobalParamWithMatlab()
 {
     SetUpMatlabEngine();
     
+    m_eng->exec("main");
+    
     mMAInputParam.SetEngine(m_eng->GetEngine());
     mMAInputParam.SetVarName("CellsParam");
+        
+    mMAFuncParam.SetEngine(m_eng->GetEngine());
+    mMAFuncParam.SetVarName("FuncParam");
     
     mMARateRange.SetEngine(m_eng->GetEngine());
     mMARateRange.SetVarName("RateRange");
     
     // x,y,hl,hw,degree  n*5 n行5列
     mMAStatistic.SetEngine(m_eng->GetEngine());
-    mMAStatistic.SetVarName("mBoxes");
+    mMAStatistic.SetVarName("mStatistic");
 
+    InitCellWrapper();
 }
 
 void TcStatistic::UpdateStatistic()
 {
+    std::cout << "UpdateStatistic start" << std::endl;
     // 更新mStatistic
     mCellWrapper.UpdateCells();
+    std::cout << "After UpdateCells" << std::endl;
     // 将更新后的Cells的内容更新到mStatistic
     // TODO
     mCellWrapper.Cells2EgineMat(mStatistic);
-    
+    std::cout << "After Cells2EgineMat" << std::endl;
     // 更新mMAStatistic，并发送到matlab引擎
     mMAStatistic.put(mStatistic);
      std::cout << "mStatistic is" << std::endl << mStatistic << std::endl;
      
      // 调用matlab引擎画出mStatistic
      m_eng->exec("drawBoxes");    
+     std::cout << "UpdateStatistic end" << std::endl;
 }
 
 void TcStatistic::InitCellWrapper()
@@ -83,26 +91,24 @@ void TcStatistic::InitCellWrapper()
     RateStatus_t maxRate;
     GetRateRange(minRate, maxRate);
     mCellWrapper.InitCellWrapper(mi, mj, mradius, mcellNum, mminNodeNum, mmaxNodeNum, minRate, maxRate, lambda, tau, miu, sigma, epsilon);
-    
+    std::cout << "After InitCellWrapper" << std::endl;
     mCellWrapper.InitCells();
+    std::cout << "After InitCells" << std::endl;
 }
 
-void TcStatistic::GetCellWrapperParam(int& mi, int& mj, int& mradius, int& mcellNum, int& mminNodeNum, int& mmaxNodeNum, float mlambda,
-    float mtau,
-    float mmiu,
-    float msigma,
-    float mepsilon)
+void TcStatistic::GetCellWrapperParam(int& mi, int& mj, int& mradius, int& mcellNum, int& mminNodeNum, int& mmaxNodeNum,
+    float &mlambda, float &mtau, float &mmiu, float &msigma, float &mepsilon)
 {
     Eigen::MatrixXf mInputParam;
     mMAInputParam.get(mInputParam);
-    EigenMat2CellWrapperParam(mInputParam, mi, mj, mradius, mcellNum, mminNodeNum, mmaxNodeNum, mlambda, mtau, mmiu, msigma, mepsilon);
+    EigenMat2CellWrapperParam(mInputParam, mi, mj, mradius, mcellNum, mminNodeNum, mmaxNodeNum);
+    
+    Eigen::MatrixXf mFuncParam;
+    mMAFuncParam.get(mFuncParam);
+    EigenMat2FuncParam(mFuncParam,  mlambda, mtau, mmiu, msigma, mepsilon);
 }
 
-void TcStatistic::EigenMat2CellWrapperParam(Eigen::MatrixXf& em, int& mi, int& mj, int& mradius, int& mcellNum, int& mminNodeNum, int& mmaxNodeNum, float mlambda,
-    float mtau,
-    float mmiu,
-    float msigma,
-    float mepsilon)
+void TcStatistic::EigenMat2CellWrapperParam(Eigen::MatrixXf& em, int& mi, int& mj, int& mradius, int& mcellNum, int& mminNodeNum, int& mmaxNodeNum)
 {
     mi = em(0, 0);
     mj = em(0, 1);
@@ -110,12 +116,17 @@ void TcStatistic::EigenMat2CellWrapperParam(Eigen::MatrixXf& em, int& mi, int& m
     mcellNum = em(0, 3);
     mminNodeNum = em(0, 4);
     mmaxNodeNum = em(0, 5);
-    mlambda = em(0, 6);
-    mtau = em(0, 7);
-    mmiu = em(0, 8);
-    msigma = em(0, 9);
-    mepsilon = em(0, 10);
+
     
+}
+
+void TcStatistic::EigenMat2FuncParam(Eigen::MatrixXf& em, float &mlambda, float &mtau, float &mmiu, float &msigma, float &mepsilon)
+{
+    mlambda = em(0, 0);
+    mtau = em(0, 1);
+    mmiu = em(0, 2);
+    msigma = em(0, 3);
+    mepsilon = em(0, 4);
 }
 
 void TcStatistic::GetRateRange(RateStatus_t& minRate, RateStatus_t& maxRate)

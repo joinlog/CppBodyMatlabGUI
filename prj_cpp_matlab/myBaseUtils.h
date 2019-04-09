@@ -24,7 +24,7 @@ public:
     //取minval-maxval中间的随机数，包含minval，不包含maxval; 如果返回的四maxval，表示计算无效
     static int myRand(int minval, int maxval);
     static float myRand(float minval, float maxval);
-    static int cutValue(int val, int maxVal, int minVal);
+    static int cutValue(int val, int minVal, int maxVal);
 private:
 
 };
