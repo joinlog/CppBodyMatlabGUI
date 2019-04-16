@@ -207,8 +207,8 @@ float newCell::CalcCurS()
 {
     float preS = GetPreRateStatusS();
     float preI = GetPreRateStatusI();
-    float numRate = SigmaSumNumRate();
-    return (preS - (lambda + tau)*(1 + numRate) * preS * preI + miu *(1 - preS) );
+    float numRate = SigmaSumNumRateI();
+    return (preS - (lambda + tau) * preS *(preI + numRate) + miu *(1 - preS) );
 }
 
 float newCell::CalcCurE()
@@ -216,8 +216,8 @@ float newCell::CalcCurE()
     float preS = GetPreRateStatusS();
     float preI = GetPreRateStatusI();
     float preE = GetPreRateStatusE();
-    float numRate = SigmaSumNumRate();
-    return (1 - sigma - miu) * preE + (1 + numRate) * lambda * preS * preI;
+    float numRate = SigmaSumNumRateI();
+    return (1 - sigma - miu) * preE + lambda * preS * ( preI + numRate);
 }
 
 float newCell::CalcCurI()
@@ -225,8 +225,8 @@ float newCell::CalcCurI()
     float preS = GetPreRateStatusS();
     float preI = GetPreRateStatusI();
     float preE = GetPreRateStatusE();
-    float numRate = SigmaSumNumRate();
-    return (1 - epsilon - miu) * preI + sigma * preE + (1 + numRate) * tau * preS * preI;
+    float numRate = SigmaSumNumRateI();
+    return (1 - epsilon - miu) * preI + sigma * preE + tau * preS * ( preI + numRate);
 }
 
 float newCell::CalcCurR()
@@ -236,13 +236,13 @@ float newCell::CalcCurR()
     return (1 - miu) * preR + epsilon * preI;
 }
 
-float newCell::SigmaSumNumRate()
+float newCell::SigmaSumNumRateI()
 {
     float sumNodeNum = 0;
     unsigned int n = cellsId.size();
     for (unsigned int i = 0; i < n; ++i)
     {
-        sumNodeNum += (float)cellsId[i]->GetNodeNum();
+        sumNodeNum += (float)cellsId[i]->GetNodeNum() * cellsId[i]->GetPreRateStatusI();
     }
     return sumNodeNum / (float)GetNodeNum();
 }
@@ -250,8 +250,8 @@ float newCell::SigmaSumNumRate()
 void newCell::DumpStr()
 {
     printf("\nid, i, j, nodeNum, neighbor num\n %d, %d, %d, %d, %d\n", id, ireal, jreal, nodeNum, cellsId.size());
-    DumpRateStatus(rs[0]);
-    DumpRateStatus(rs[1]);
+    DumpRateStatus(rs[tcPre]);
+    DumpRateStatus(rs[tcCur]);
 }
 
 void newCell::DumpRateStatus(RateStatus_t& rs)

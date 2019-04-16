@@ -36,7 +36,7 @@ axis equal;
 % //    int minNodeNum; //每个Cell中最小节点个数
 % //    int maxNodeNum; //每个Cell中最大节点个数
 
-CellsParam = [100, 100, 20, 3000, 6, 10];
+CellsParam = [100, 100, 10, 600, 6, 10];
 % //    float lambda; // λ
 % //    float tau; // τ
 % //    float miu; //μ

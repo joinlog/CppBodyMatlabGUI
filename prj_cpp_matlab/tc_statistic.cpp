@@ -63,7 +63,7 @@ void TcStatistic::UpdateStatistic()
     std::cout << "After Cells2EgineMat" << std::endl;
     // 更新mMAStatistic，并发送到matlab引擎
     mMAStatistic.put(mStatistic);
-     std::cout << "mStatistic is" << std::endl << mStatistic << std::endl;
+     //std::cout << "mStatistic is" << std::endl << mStatistic << std::endl;
      
      // 调用matlab引擎画出mStatistic
      m_eng->exec("drawBoxes");    

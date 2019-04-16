@@ -85,7 +85,7 @@ private:
     float CalcCurE();
     float CalcCurI();
     float CalcCurR();
-    float SigmaSumNumRate();
+    float SigmaSumNumRateI();
     
     void DumpRateStatus(RateStatus_t &rs);
 private:
