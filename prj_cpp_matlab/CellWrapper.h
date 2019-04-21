@@ -16,7 +16,8 @@
 
 #include <unordered_map>
 #include "newCell.h"
-#include "matlabWrapper.h"
+#include "Eigen/Eigen"
+//#include "matlabWrapper.h"
 
 class CellWrapper
 {
@@ -44,6 +45,9 @@ private:
     void GetNeightborCells(int i, int j, std::vector<newCell *> &vcCells);
     
     void Cell2EgineMat(newCell &nc, Eigen::MatrixXf &em, int row);
+    
+    void OpenFile();
+    void CloseFile();
 
 private:
     int imax;
@@ -62,6 +66,7 @@ private:
     float sigma; //σ,ς
     float epsilon; // ε
     float omega;   //例如ω= λ / 8
+    FILE *fp;
 };
 
 #endif /* CELLWRAPPER_H */

@@ -48,7 +48,7 @@ public:
     float mtau,
     float mmiu,
     float msigma,
-    float mepsilon);
+    float mepsilon, float momega,  FILE *fp);
     newCell(const newCell & a);
     newCell(newCell && a);
     ~newCell();
@@ -87,6 +87,7 @@ private:
     float CalcCurR();
     float SigmaSumNumRateI();
     
+    void DumpNeighborRS();
     void DumpRateStatus(RateStatus_t &rs);
 private:
     int id;
@@ -102,6 +103,8 @@ private:
     float sigma; //σ,ς
     float epsilon; // ε
     float omega;   //例如ω= λ / 8
+    
+    FILE *fp;
 };
 
 #endif /* NEWCELL_H */

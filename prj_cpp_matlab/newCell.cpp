@@ -11,10 +11,12 @@
  * Created on 2019年4月4日, 下午3:49
  */
 
+#include <cmath>
+#include <iostream>
 #include "newCell.h"
 #include "myBaseUtils.h"
 
-newCell::newCell():id(0), ireal(0),jreal(0),nodeNum(0),lambda(0), tau(0), miu(0),sigma(0),epsilon(0)
+newCell::newCell():id(0), ireal(0),jreal(0),nodeNum(0),lambda(0), tau(0), miu(0),sigma(0),epsilon(0),omega(0), fp(NULL)
 {
     memset(rs, 0, sizeof(rs));
 }
@@ -23,8 +25,8 @@ newCell::newCell(int mid, int mi, int mj, int mNodeNum,float mlambda,
     float mtau,
     float mmiu,
     float msigma,
-    float mepsilon):id(mid), ireal(mi),jreal(mj),nodeNum(mNodeNum),
-        lambda(mlambda), tau(mtau), miu(mmiu),sigma(msigma),epsilon(mepsilon)
+    float mepsilon, float momega, FILE *mfp):id(mid), ireal(mi),jreal(mj),nodeNum(mNodeNum),
+        lambda(mlambda), tau(mtau), miu(mmiu),sigma(msigma),epsilon(mepsilon),omega(momega), fp(mfp)
 {
     memset(rs, 0, sizeof(rs));
 }
@@ -53,24 +55,52 @@ newCell & newCell::operator =(const newCell& a)
 
 void newCell::SetCurrentRateStatusS(float val)
 {
+    if (!std::isfinite(val))
+    {
+        std::cout<<"Set S Nan"<<std::flush<<std::endl;
+        DumpStr();
+        DumpNeighborRS();
+        exit(1);
+    }
     SetRateStatus(val, sfS, tcCur);
 }
 
 
 void newCell::SetCurrentRateStatusE(float val)
 {
+    if (!std::isfinite(val))
+    {
+        std::cout<<"Set E Nan"<<std::flush<<std::endl;
+        DumpStr();
+        DumpNeighborRS();
+        exit(1);
+    }
     SetRateStatus(val, sfE, tcCur);
 }
 
 
 void newCell::SetCurrentRateStatusI(float val)
 {
+    if (!std::isfinite(val))
+    {
+        std::cout<<"Set I Nan"<<std::flush<<std::endl;
+        DumpStr();
+        DumpNeighborRS();
+        exit(1);
+    }
     SetRateStatus(val, sfI, tcCur);
 }
 
 
 void newCell::SetCurrentRateStatusR(float val)
 {
+    if (!std::isfinite(val))
+    {
+        std::cout<<"Set R Nan"<<std::flush<<std::endl;
+        DumpStr();
+        DumpNeighborRS();
+        exit(1);
+    }
     SetRateStatus(val, sfR, tcCur);
 }
 
@@ -242,9 +272,9 @@ float newCell::SigmaSumNumRateI()
     unsigned int n = cellsId.size();
     for (unsigned int i = 0; i < n; ++i)
     {
-        sumNodeNum += (float)cellsId[i]->GetNodeNum() * cellsId[i]->GetPreRateStatusI();
+        sumNodeNum += ((float)cellsId[i]->GetNodeNum()) * cellsId[i]->GetPreRateStatusI();
     }
-    float sumSigma = sumNodeNum / (float)GetNodeNum();
+    float sumSigma = sumNodeNum / ((float)GetNodeNum());
     return sumSigma * omega; // 相当于 ωαβ
 }
 
@@ -255,7 +285,17 @@ void newCell::DumpStr()
     DumpRateStatus(rs[tcCur]);
 }
 
+void newCell::DumpNeighborRS()
+{
+    for (auto elem : cellsId)
+    {
+        elem->DumpStr();
+    }
+
+}
 void newCell::DumpRateStatus(RateStatus_t& rs)
 {
     printf("S, E, I, R\n %.2f, %.2f, %.2f, %.2f\n", rs.s, rs.e, rs.i, rs.r);
+    
+    fprintf(fp, "%d, %.2f, %.2f, %.2f, %.2f\n", id, rs.s, rs.e, rs.i, rs.r);
 } 

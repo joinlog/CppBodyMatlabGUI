@@ -16,17 +16,19 @@
 
 #include <cstdlib>
 #include <cassert>
+#include <time.h>
 
 CellWrapper::CellWrapper():imax(0),jmax(0),radius(0),cellNum(0),minNodeNum(0),maxNodeNum(0)
 {
     memset(&minRate, 0, sizeof(minRate));
     memset(&maxRate, 0, sizeof(maxRate));
+    OpenFile();
 }
 
 CellWrapper::CellWrapper(int mi, int mj, int mradius, int mcellNum, int mminNodeNum, int mmaxNodeNum, RateStatus_t mminRate, RateStatus_t mmaxRate):
 imax(mi),jmax(mj),radius(mradius), cellNum(mcellNum), minNodeNum(mminNodeNum),maxNodeNum(mmaxNodeNum),minRate(mminRate),maxRate(mmaxRate)
 {
-    
+    OpenFile();
 }
 
 CellWrapper::~CellWrapper()
@@ -164,7 +166,7 @@ void CellWrapper::NewACell(int id, int i, int j)
 //    std::cout << "before mNodeNum min="<< minNodeNum << ", max=" << maxNodeNum << std::endl << std::flush; 
     int mNodeNum = myBaseUtils::myRand(minNodeNum, maxNodeNum);
 //    std::cout << "before new newCell" << std::endl << std::flush; 
-    newCell *nc = new newCell(id, i, j, mNodeNum, lambda, tau, miu, sigma, epsilon);
+    newCell *nc = new newCell(id, i, j, mNodeNum, lambda, tau, miu, sigma, epsilon, omega, fp);
     if (nc == NULL)
     {
         std::cout << "new cell fail" << std::flush;
@@ -230,7 +232,10 @@ void CellWrapper::GetNeightborCells(int mi, int mj, std::vector<newCell*> &vcCel
     {
         for (int j = minj; j <= maxj; ++j)
         {
-            
+            if (i == mi && j == mj)
+            {
+                continue;
+            }
             int id = MakeIdUsePos(i, j);
             std::unordered_map<int, newCell*>::iterator umpit = umpCells.find(id);
             if (umpit == umpCells.end())
@@ -251,4 +256,19 @@ void CellWrapper::Cell2EgineMat(newCell& nc, Eigen::MatrixXf & em, int row)
     em(row, 3) = nc.GetPreRateStatusE();
     em(row, 4) = nc.GetPreRateStatusI();
     em(row, 5) = nc.GetPreRateStatusR();
+}
+
+void  CellWrapper::OpenFile()
+{
+    fp = fopen("result.csv", "w+");
+    if (fp == NULL)
+    {
+        assert(fp != NULL);
+    }
+}
+
+void CellWrapper::CloseFile()
+{
+    fclose(fp);
+    fp  = NULL;
 }
