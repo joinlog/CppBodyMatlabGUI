@@ -27,6 +27,9 @@ int main(int argc, char** argv)
     tcm.SetUpGlobalParamWithMatlab();
 
     system("pwd");
+    std::cout << std::endl;
+    std::cout << "Press q to quit. Press Any other Key to Continue..." << std::endl;
+    char mcret = getchar();
 #endif
 
     bool bIsStepByStep = false;

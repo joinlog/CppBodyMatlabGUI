@@ -36,13 +36,15 @@ axis equal;
 % //    int minNodeNum; //每个Cell中最小节点个数
 % //    int maxNodeNum; //每个Cell中最大节点个数
 
-CellsParam = [100, 100, 10, 600, 6, 10];
+CellsParam = [100, 100, 7, 500, 6, 6];
 % //    float lambda; // λ
 % //    float tau; // τ
 % //    float miu; //μ
 % //    float sigma; //σ,?
 % //    float epsilon; // ε
-FuncParam = [0.064, 0.2572, 0.053, 0.3028, 0.3298];
+% //    float omega;   例如ω= λ / 8
+FuncParam = [0.064, 0.2572, 0.053, 0.3028, 0.3298, 0.064 * 0.125];
+FuncParam(1,6) = FuncParam(1,1) / 8; %例如ω= λ / 8 
 % //    RateStatus_t minRate; // 各个状态占有最大比率,用于初始化cell
 % //    RateStatus_t maxRate; // 各个状态占有最大比率,用于初始化cell
 RateRange = [0.8 0 0.2 0

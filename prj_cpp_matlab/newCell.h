@@ -101,6 +101,7 @@ private:
     float miu; //μ
     float sigma; //σ,ς
     float epsilon; // ε
+    float omega;   //例如ω= λ / 8
 };
 
 #endif /* NEWCELL_H */

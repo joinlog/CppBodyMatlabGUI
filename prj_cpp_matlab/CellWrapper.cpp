@@ -43,7 +43,8 @@ void CellWrapper::InitCellWrapper(int mi, int mj, int mradius, int mcellNum, int
     float mtau,
     float mmiu,
     float msigma,
-    float mepsilon)
+    float mepsilon,
+    float momega)
 {
     imax = mi;
     jmax = mj;
@@ -58,11 +59,14 @@ void CellWrapper::InitCellWrapper(int mi, int mj, int mradius, int mcellNum, int
     miu = mmiu;
     sigma = msigma;
     epsilon = mepsilon;
+    omega = momega;
+    std::cout <<"mi, mj, mradius, mcellNum, mminNodeNum, mmaxNodeNum, lambda, tau, miu, sigma, epsilon, omega"<<std::endl;
     std::cout<<mi << "    " <<mj << "    " <<mradius << "    " <<mcellNum << "    " <<mminNodeNum << "    " <<mmaxNodeNum  << "    " <<mlambda 
    << "    " <<mtau 
    << "    " <<mmiu 
    << "    " <<msigma 
-   << "    " <<mepsilon <<std::endl;
+   << "    " <<mepsilon
+   << "    " <<omega <<std::endl;
 }
 
 void CellWrapper::InitCells()

@@ -23,9 +23,9 @@ private:
     
     void InitCellWrapper();
     void GetCellWrapperParam(int &mi, int &mj, int &mradius, int &mcellNum, int &mminNodeNum, int &mmaxNodeNum,
-                float &mlambda, float &mtau, float &mmiu, float &msigma, float &mepsilon);
+                float &mlambda, float &mtau, float &mmiu, float &msigma, float &mepsilon, float &omega);
     void EigenMat2CellWrapperParam(Eigen::MatrixXf &em, int &mi, int &mj, int &mradius, int &mcellNum, int &mminNodeNum, int &mmaxNodeNum);
-    void EigenMat2FuncParam(Eigen::MatrixXf &em, float &mlambda, float &mtau, float &mmiu, float &msigma, float &mepsilon);
+    void EigenMat2FuncParam(Eigen::MatrixXf &em, float &mlambda, float &mtau, float &mmiu, float &msigma, float &mepsilon, float &omega);
     void GetRateRange(RateStatus_t &minRate, RateStatus_t &maxRate);
     void EigenMat2RateRange(Eigen::MatrixXf &em, int row, RateStatus_t &rs);
     
@@ -45,6 +45,7 @@ private:
 //    float miu; //μ
 //    float sigma; //σ,ς
 //    float epsilon; // ε
+    //float omega;   //例如ω= λ / 8
     MatIOArray mMAFuncParam;
 //    RateStatus_t minRate; // 各个状态占有最大比率,用于初始化cell
 //    RateStatus_t maxRate; // 各个状态占有最大比率,用于初始化cell

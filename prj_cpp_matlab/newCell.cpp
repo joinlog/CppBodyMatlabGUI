@@ -244,7 +244,8 @@ float newCell::SigmaSumNumRateI()
     {
         sumNodeNum += (float)cellsId[i]->GetNodeNum() * cellsId[i]->GetPreRateStatusI();
     }
-    return sumNodeNum / (float)GetNodeNum();
+    float sumSigma = sumNodeNum / (float)GetNodeNum();
+    return sumSigma * omega; // 相当于 ωαβ
 }
 
 void newCell::DumpStr()
@@ -257,4 +258,4 @@ void newCell::DumpStr()
 void newCell::DumpRateStatus(RateStatus_t& rs)
 {
     printf("S, E, I, R\n %.2f, %.2f, %.2f, %.2f\n", rs.s, rs.e, rs.i, rs.r);
-}
+} 

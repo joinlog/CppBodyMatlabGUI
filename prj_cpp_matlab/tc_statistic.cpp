@@ -84,20 +84,21 @@ void TcStatistic::InitCellWrapper()
     float miu; //μ
     float sigma; //σ,ς
     float epsilon; // ε
+    float omega;   //例如ω= λ / 8
     
-    GetCellWrapperParam(mi, mj, mradius, mcellNum, mminNodeNum, mmaxNodeNum, lambda, tau, miu, sigma, epsilon);
+    GetCellWrapperParam(mi, mj, mradius, mcellNum, mminNodeNum, mmaxNodeNum, lambda, tau, miu, sigma, epsilon, omega);
     
     RateStatus_t minRate;
     RateStatus_t maxRate;
     GetRateRange(minRate, maxRate);
-    mCellWrapper.InitCellWrapper(mi, mj, mradius, mcellNum, mminNodeNum, mmaxNodeNum, minRate, maxRate, lambda, tau, miu, sigma, epsilon);
+    mCellWrapper.InitCellWrapper(mi, mj, mradius, mcellNum, mminNodeNum, mmaxNodeNum, minRate, maxRate, lambda, tau, miu, sigma, epsilon, omega);
     std::cout << "After InitCellWrapper" << std::endl;
     mCellWrapper.InitCells();
     std::cout << "After InitCells" << std::endl;
 }
 
 void TcStatistic::GetCellWrapperParam(int& mi, int& mj, int& mradius, int& mcellNum, int& mminNodeNum, int& mmaxNodeNum,
-    float &mlambda, float &mtau, float &mmiu, float &msigma, float &mepsilon)
+    float &mlambda, float &mtau, float &mmiu, float &msigma, float &mepsilon, float &omega)
 {
     Eigen::MatrixXf mInputParam;
     mMAInputParam.get(mInputParam);
@@ -105,7 +106,7 @@ void TcStatistic::GetCellWrapperParam(int& mi, int& mj, int& mradius, int& mcell
     
     Eigen::MatrixXf mFuncParam;
     mMAFuncParam.get(mFuncParam);
-    EigenMat2FuncParam(mFuncParam,  mlambda, mtau, mmiu, msigma, mepsilon);
+    EigenMat2FuncParam(mFuncParam,  mlambda, mtau, mmiu, msigma, mepsilon, omega);
 }
 
 void TcStatistic::EigenMat2CellWrapperParam(Eigen::MatrixXf& em, int& mi, int& mj, int& mradius, int& mcellNum, int& mminNodeNum, int& mmaxNodeNum)
@@ -120,13 +121,14 @@ void TcStatistic::EigenMat2CellWrapperParam(Eigen::MatrixXf& em, int& mi, int& m
     
 }
 
-void TcStatistic::EigenMat2FuncParam(Eigen::MatrixXf& em, float &mlambda, float &mtau, float &mmiu, float &msigma, float &mepsilon)
+void TcStatistic::EigenMat2FuncParam(Eigen::MatrixXf& em, float &mlambda, float &mtau, float &mmiu, float &msigma, float &mepsilon, float &omega)
 {
     mlambda = em(0, 0);
     mtau = em(0, 1);
     mmiu = em(0, 2);
     msigma = em(0, 3);
     mepsilon = em(0, 4);
+    omega = em(0, 5);
 }
 
 void TcStatistic::GetRateRange(RateStatus_t& minRate, RateStatus_t& maxRate)
