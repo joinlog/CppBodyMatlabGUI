@@ -4,6 +4,7 @@
 */dist/
 */.dep.inc
 */*.asv
+*/*.csv
 */nbproject/*.mk
 */nbproject/*.bash
 */nbproject/*.properties

@@ -29,12 +29,29 @@ void TcStatistic::SetUpGlobalParamWithMatlab()
 {
     SetUpMatlabEngine();
 
+ //    int imax;
+ //    int jmax;
+ //    int radius;
+ //    int cellNum; // 生成umpCells的个数
+ //    int minNodeNum; //每个Cell中最小节点个数
+ //    int maxNodeNum; //每个Cell中最大节点个数
+
     mMAInputParam = Eigen::MatrixXf(1,6);
     mMAInputParam << 100, 100, 7, 500, 6, 6;
         
+//    float lambda; // λ
+//    float tau; // τ
+//    float miu; //μ
+//    float sigma; //σ,?
+//    float epsilon; // ε
+//    float omega;   例如ω= λ / 8
+
     mMAFuncParam = Eigen::MatrixXf(1,6);
     mMAFuncParam << 0.064, 0.2572, 0.053, 0.3028, 0.3298, 0.064 * 0.125;
     
+//    RateStatus_t minRate; // 各个状态占有最大比率,用于初始化cell
+//    RateStatus_t maxRate; // 各个状态占有最大比率,用于初始化cell
+
     mMARateRange = Eigen::MatrixXf(2,4);
     mMARateRange << 0.8, 0, 0.2, 0,
                     0.8, 0, 0.2, 0;
