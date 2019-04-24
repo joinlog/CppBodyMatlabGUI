@@ -49,12 +49,20 @@ int main(int argc, char** argv)
     do 
     {
 #if ENABLE_MATLAB_GUI
-        tcm.UpdateStatistic();
+        try
+        {
+            tcm.UpdateStatistic();
+        }
+        catch(const char *str)
+        {
+            std::cout << str << std::endl;
+            break;
+        }
 #endif
 
         if (!bIsStepByStep)
         {
-            Sleep(1000);
+            Sleep(100);
         }
         else
         {

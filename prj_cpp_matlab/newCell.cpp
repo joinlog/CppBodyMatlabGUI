@@ -282,7 +282,7 @@ void newCell::DumpStr()
 {
     printf("\nid, i, j, nodeNum, neighbor num\n %d, %d, %d, %d, %d\n", id, ireal, jreal, nodeNum, cellsId.size());
     DumpRateStatus(rs[tcPre]);
-    DumpRateStatus(rs[tcCur]);
+    //DumpRateStatus(rs[tcCur]);
 }
 
 void newCell::DumpNeighborRS()

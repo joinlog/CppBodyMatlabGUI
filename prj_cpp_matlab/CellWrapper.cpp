@@ -92,10 +92,21 @@ void CellWrapper::UpdateCells()
     {
         umpit->second->CopyCurrent2PreviousRateStatus();
     }
+    bool bexit = true;
+    int less1SNum = 0;
     for (umpit = umpCells.begin(); umpit != umpCells.end(); ++umpit)
     {
         umpit->second->CalcCurrentRateStatus();
         umpit->second->DumpStr();
+        if (umpit->second->GetPreRateStatusS() < 0.99)
+        {
+            less1SNum++;
+        }
+    }
+    std::cout<<"less1SNum="<<less1SNum<<std::endl;
+    if (less1SNum < 3)
+    {
+        throw "All S are = 1";
     }
 }
 
