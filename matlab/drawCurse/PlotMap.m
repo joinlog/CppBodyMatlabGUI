@@ -25,9 +25,9 @@ t=1:m;
 %plot(t,VarName1,'-sb',t,VarName2,'-og',t,VarName3,'-*r');
 plot(t,S,'-s',t,E,'-o',t,I,'-*r',t,R,'-d');
 legend('S','E','I','R');
-title('Title','FontName','Times New Roman','FontWeight','Bold','FontSize',16)
+%title('Title','FontName','Times New Roman','FontWeight','Bold','FontSize',16)
 xlabel('Time','FontName','Times New Roman','FontSize',14)
-ylabel('Cell Status Rate','FontName','Times New Roman','FontSize',14,'Rotation',90)
+ylabel('Cell Status Percentage','FontName','Times New Roman','FontSize',14,'Rotation',90)
 
 
 hold on;
