@@ -282,7 +282,12 @@ void newCell::DumpStr()
 {
     printf("\nid, i, j, nodeNum, neighbor num\n %d, %d, %d, %d, %d\n", id, ireal, jreal, nodeNum, cellsId.size());
     DumpRateStatus(rs[tcPre]);
-    //DumpRateStatus(rs[tcCur]);
+    DumpRateStatus(rs[tcCur]);
+}
+
+void newCell::DumpCurrentStatus()
+{
+    DumpRateStatus(rs[tcCur]);
 }
 
 void newCell::DumpNeighborRS()
@@ -295,7 +300,7 @@ void newCell::DumpNeighborRS()
 }
 void newCell::DumpRateStatus(RateStatus_t& rs)
 {
-    printf("S, E, I, R\n %.2f, %.2f, %.2f, %.2f\n", rs.s, rs.e, rs.i, rs.r);
-    
-    fprintf(fp, "%d, %.2f, %.2f, %.2f, %.2f\n", id, rs.s, rs.e, rs.i, rs.r);
+    printf("id, S, E, I, R\n %d %f, %f, %f, %f\n", id, rs.s, rs.e, rs.i, rs.r);
+    //printf(".");
+    fprintf(fp, "%d, %f, %f, %f, %f\n", id, rs.s, rs.e, rs.i, rs.r);
 } 

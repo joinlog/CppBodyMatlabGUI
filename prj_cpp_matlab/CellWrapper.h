@@ -48,6 +48,8 @@ private:
     
     void OpenFile();
     void CloseFile();
+    
+    void DumpCells();
 
 private:
     int imax;

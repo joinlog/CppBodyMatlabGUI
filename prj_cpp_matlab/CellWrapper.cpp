@@ -82,6 +82,7 @@ void CellWrapper::InitCells()
     // 初始化cellsId
     InitNeighborCells();
     
+    DumpCells();
 }
 
 void CellWrapper::UpdateCells()
@@ -97,7 +98,7 @@ void CellWrapper::UpdateCells()
     for (umpit = umpCells.begin(); umpit != umpCells.end(); ++umpit)
     {
         umpit->second->CalcCurrentRateStatus();
-        umpit->second->DumpStr();
+        umpit->second->DumpCurrentStatus();
         if (umpit->second->GetPreRateStatusS() < 0.99)
         {
             less1SNum++;
@@ -127,7 +128,18 @@ void CellWrapper::InitCellPos(std::vector<int> &a)
 {
     srand(time(NULL));
     // i, j, cellNum
-    a.resize(imax*jmax, 0); // 扩展空间i*j，默认值为0
+    int n = imax*jmax;
+    //特例处理
+    if (n == cellNum)
+    {
+        a.resize(n, 1); // 扩展空间i*j，默认值为1
+        return;
+    }
+    else
+    {
+        a.resize(n, 0); // 扩展空间i*j，默认值为0
+    }
+    
     int k = 0;
     while(k < cellNum)
     {
@@ -282,4 +294,13 @@ void CellWrapper::CloseFile()
 {
     fclose(fp);
     fp  = NULL;
+}
+
+void CellWrapper::DumpCells()
+{
+    std::unordered_map<int, newCell*>::iterator umpit = umpCells.begin();
+    for (; umpit != umpCells.end(); ++umpit)
+    {
+        umpit->second->DumpStr();
+    }
 }

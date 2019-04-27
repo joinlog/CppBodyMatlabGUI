@@ -71,6 +71,7 @@ public:
     void CalcCurrentRateStatus();
     
     void DumpStr();
+    void DumpCurrentStatus();
 private:
     void SetRateStatus(float val, StatusFlag_e st, TimeCount_e tc);
     void SetRateStatusRes(float val, StatusFlag_e st, RateStatus_t &mRs);
