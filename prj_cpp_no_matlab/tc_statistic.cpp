@@ -47,14 +47,15 @@ void TcStatistic::SetUpGlobalParamWithMatlab()
 //    float omega;   例如ω= λ / 8
 
     mMAFuncParam = Eigen::MatrixXf(1,6);
-    mMAFuncParam << 0.064, 0.2572, 0.053, 0.3028, 0.3298, 0.064 * 0.125;
+    //mMAFuncParam << 0.064, 0.2572, 0.053, 0.3028, 0.3298, 0.064 * 0.125;
+    mMAFuncParam << 0.064, 0.4572, 0.053, 0.3028, 0.3298, 0.064 * 0.125;
     
 //    RateStatus_t minRate; // 各个状态占有最大比率,用于初始化cell
 //    RateStatus_t maxRate; // 各个状态占有最大比率,用于初始化cell
 
     mMARateRange = Eigen::MatrixXf(2,4);
-    mMARateRange << 0.8, 0, 0.2, 0,
-                    0.8, 0, 0.2, 0;
+    mMARateRange << 0.6, 0, 0.2, 0,
+                    0.8, 0, 0.4, 0;
 
     InitCellWrapper();
 }
