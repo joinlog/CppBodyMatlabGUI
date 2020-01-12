@@ -236,7 +236,7 @@ public:
     
 protected:
     std::string var_plot_code(std::string nm, std::string var){
-        boost::trim(nm); boost::trim(var);
+        //boost::trim(nm); boost::trim(var);
         if (nm == ""){
             return "";
         }

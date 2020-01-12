@@ -1,4 +1,9 @@
 #include <Eigen/Eigen>
+#include <direct.h> // _getcwd
+#include <stdlib.h> // free, perror
+#include <stdio.h>  // printf
+#include <string.h> // strlen
+
 #include "tc_statistic.h"
 #include "matlabWrapper.h"
 
@@ -16,7 +21,7 @@ TcStatistic::~TcStatistic()
 void TcStatistic::SetUpMatlabEngine()
 {
     
-    char *mCwd = getcwd(NULL, 0);
+    char *mCwd = _getcwd(NULL, 0);
 
     //将matlab引擎目录指定到当前程序运行目录，使可以调用其中的matlab scirpt 文件
     std::string strCmd = "cd ";
