@@ -22,7 +22,7 @@ global g_try_code;
 global g_clm_code;
 
 axis equal;
-PlotMap('..\data\');
+%PlotMap('..\data\');
 
 h_start = []; % 1行n列,访问格式h_start(i)
 h_end = []; % 1行n列

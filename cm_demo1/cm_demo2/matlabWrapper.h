@@ -1,4 +1,4 @@
-#ifndef __MATLAB_WRAPPER_HPP__
+﻿#ifndef __MATLAB_WRAPPER_HPP__
 #define __MATLAB_WRAPPER_HPP__
 
 //代码依赖：Matlab，Eigen，Boost 
@@ -7,6 +7,10 @@
 #include <string>
 #include <iostream>
 #include <Eigen/Eigen>
+#include <direct.h> // _getcwd
+#include <stdlib.h> // free, perror
+#include <stdio.h>  // printf
+#include <string.h> // strlen
 //#include <boost\algorithm\string.hpp>
 
 inline std::string rndcolor(){
@@ -121,6 +125,7 @@ private:
         else{
             std::cout << "MATLAB has been started successfully!" << std::endl;
         }
+        pInstance = nullptr;
     }
     ~myMatlabEngine(){
         // if you are testing algorithm, you are encouraged to keep the line below bing committed.
@@ -128,6 +133,22 @@ private:
 
         delete pInstance;
         pInstance = nullptr;
+    }
+
+    static std::string GetCmdStringChangeToCurrentDirection()
+    {
+
+        char *mCwd = _getcwd(NULL, 0);
+
+        //将matlab引擎目录指定到当前程序运行目录，使可以调用其中的matlab scirpt 文件
+        std::string strCmd = "cd ";
+        strCmd.append(mCwd);
+        strCmd.append("\\matlab");
+        std::cout << "Set Matlab Engine to Direction: " << std::endl << strCmd << std::endl;
+        
+        free(mCwd);
+        mCwd = NULL;
+        return strCmd;
     }
 public:
     static myMatlabEngine *getInstance()
@@ -139,10 +160,15 @@ public:
             if (pInstance == nullptr)
             {
                 pInstance = new myMatlabEngine();
+                pInstance->exec(GetCmdStringChangeToCurrentDirection());
+                
+                std::cout << "Run main.m" << std::endl;
+                pInstance->exec("main");
             }
         }
         return pInstance;
     }
+
 
     // line_spec : "LineStyle" + "Marker" + "Color", e.g. "-or"
     // for line
@@ -293,7 +319,7 @@ private:
     Engine *_engine;
     static myMatlabEngine *pInstance;
 };
-myMatlabEngine * myMatlabEngine::pInstance = nullptr;
+
 
 
 class MatIOArray
@@ -315,7 +341,7 @@ public :
         this->_engine = _engine;
     }
         
-    void SetVarName(const char* var_name)
+    void SetVarName(const std::string &var_name)
     {
         this->varName = var_name;
     }

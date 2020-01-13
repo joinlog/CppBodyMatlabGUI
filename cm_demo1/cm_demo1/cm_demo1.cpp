@@ -42,7 +42,7 @@ int main(int argc, char** argv)
 	{
 		mRow = atoi(argv[1]);
 		mCol = atoi(argv[2]);
-		bIsStepByStep = atoi(argv[2]) == 0 ? false : true;
+		bIsStepByStep = atoi(argv[3]) == 0 ? false : true;
 	}
 	else
 	{
