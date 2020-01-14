@@ -20,20 +20,20 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
-    <ProjectGuid>{8CF8F436-A304-4CA1-A751-81C65C5AC6C0}</ProjectGuid>
+    <ProjectGuid>{FAC700AF-631D-46A7-95F9-676ADBF41FAA}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>cm_demo2</RootNamespace>
+    <RootNamespace>cm_base</RootNamespace>
     <WindowsTargetPlatformVersion>10.0.15063.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v141</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v141</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
@@ -87,9 +87,9 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>VPlot_API_EXPORTS;WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)..\..\;$(ProjectDir)..\cm_base\;$(ProjectDir)..\..\matlab2013a_extern\include\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)..\..\;$(ProjectDir)..\..\matlab2013a_extern\include\</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -118,9 +118,9 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>VPlot_API_EXPORTS;WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)..\..\;$(ProjectDir)..\cm_base\;$(ProjectDir)..\..\matlab2013a_extern\include\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)..\..\;$(ProjectDir)..\..\matlab2013a_extern\include\</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -152,17 +152,16 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\cm_base\IDataChangeListener.cpp" />
-    <ClCompile Include="..\cm_base\IDataChangeNotifier.cpp" />
-    <ClCompile Include="..\cm_base\matlabWrapper.cpp" />
-    <ClCompile Include="cmdemo2.cpp" />
-    <ClCompile Include="DrawBoxes.cpp" />
+    <ClCompile Include="IDataChangeListener.cpp" />
+    <ClCompile Include="IDataChangeNotifier.cpp" />
+    <ClCompile Include="matlabWrapper.cpp" />
+    <ClCompile Include="VPlot.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\cm_base\IDataChangeListener.h" />
-    <ClInclude Include="..\cm_base\IDataChangeNotifier.h" />
-    <ClInclude Include="..\cm_base\matlabWrapper.h" />
-    <ClInclude Include="DrawBoxes.h" />
+    <ClInclude Include="IDataChangeListener.h" />
+    <ClInclude Include="IDataChangeNotifier.h" />
+    <ClInclude Include="matlabWrapper.h" />
+    <ClInclude Include="VPlot.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

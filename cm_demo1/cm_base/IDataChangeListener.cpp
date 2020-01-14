@@ -25,3 +25,8 @@ void IDataChangeListener::onDataChanging(const Eigen::MatrixXf &val)
     m_eng->exec(mtScriptName);
     //std::cout << mtScriptName << std::endl;
 }
+
+void IDataChangeListener::onRequestData(Eigen::MatrixXf &val)
+{
+    mtVal.get(val);
+}

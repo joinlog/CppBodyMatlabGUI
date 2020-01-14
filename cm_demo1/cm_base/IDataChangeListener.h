@@ -11,6 +11,7 @@ public:
     IDataChangeListener(std::string matScriptName, std::string matVarName);
     ~IDataChangeListener();
     void onDataChanging(const Eigen::MatrixXf &val);
+    void onRequestData(Eigen::MatrixXf &val);
 
 private:
     myMatlabEngine *m_eng;

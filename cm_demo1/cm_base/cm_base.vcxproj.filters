@@ -18,33 +18,30 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="cmdemo2.cpp">
+    <ClCompile Include="IDataChangeListener.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="DrawBoxes.cpp">
+    <ClCompile Include="IDataChangeNotifier.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="..\cm_base\IDataChangeListener.cpp">
+    <ClCompile Include="matlabWrapper.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="..\cm_base\IDataChangeNotifier.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="..\cm_base\matlabWrapper.cpp">
+    <ClCompile Include="VPlot.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="DrawBoxes.h">
+    <ClInclude Include="IDataChangeListener.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="..\cm_base\IDataChangeListener.h">
+    <ClInclude Include="IDataChangeNotifier.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="..\cm_base\IDataChangeNotifier.h">
+    <ClInclude Include="matlabWrapper.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="..\cm_base\matlabWrapper.h">
+    <ClInclude Include="VPlot.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

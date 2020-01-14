@@ -18,34 +18,19 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="cmdemo2.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="DrawBoxes.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="..\cm_base\IDataChangeListener.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="..\cm_base\IDataChangeNotifier.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="..\cm_base\matlabWrapper.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
+    <ClInclude Include="stdafx.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="targetver.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="DrawBoxes.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="..\cm_base\IDataChangeListener.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="..\cm_base\IDataChangeNotifier.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="..\cm_base\matlabWrapper.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="cmdemo3.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
