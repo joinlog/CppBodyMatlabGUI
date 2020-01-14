@@ -27,7 +27,6 @@ function drawBoxes()
     end
     
     idxStart=0;
-    mBoxes
     [m,n]=size(mBoxes);
     i=0;
     for j = 1:m

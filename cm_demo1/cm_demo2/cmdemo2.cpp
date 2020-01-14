@@ -17,7 +17,6 @@ int main()
     int mCnt = 100;
     while (--mCnt)
     {
-
         mBoxParam.push_back(g_clm_code);
         mBoxParam.push_back(0);
         mBoxParam.push_back(0);
@@ -40,8 +39,9 @@ int main()
 
         mDrawBoxes.SetBoxes(mBoxParam);
         mDrawBoxes.notify();
-        Sleep(800);
+        Sleep(300);
         std::cout << ".";
+        mBoxParam.clear();
     }
     return 0;
 }
